@@ -17,6 +17,9 @@ export class ProductListComponent implements OnInit {
   selectedProduct: Product | null = null;
   sliderImagePreviews: string[] = [];
 
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
+
   @ViewChild('productImage') productImageInput!: ElementRef;
   @ViewChild('sliderImagesInput') sliderImagesInput!: ElementRef;
 
@@ -24,6 +27,13 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private categoryService: CategoryService
   ) {}
+
+
+  showToast(message: string, type: 'success' | 'error' = 'success') {  
+    this.toastMessage = message;
+    this.toastType = type;
+    setTimeout(() => this.toastMessage = '', 3000);
+  }
 
   ngOnInit() {
     this.loadProducts();
@@ -109,13 +119,13 @@ onUpdateProduct() {
     const productId = this.selectedProduct._id.replace(/[{}]/g, '');  // Clean the product ID
     this.productService.updateProduct(productId, formData).subscribe({
       next: () => {
-        alert('Product updated successfully!');
+        this.showToast('✅ Product updated successfully!', 'success');
         this.loadProducts(); // Reload products
         this.selectedProduct = null; // Close the modal
       },
       error: (err) => {
         console.error('Error updating product:', err);
-        alert('Error updating product');
+        this.showToast('❌ Error updating product!', 'error');
       }
     });
   }
@@ -124,16 +134,23 @@ onUpdateProduct() {
 
 
 
-  // Method to handle product deletion
-  deleteProduct(id: string) {
-    if (confirm('Are you sure you want to delete this product?')) {
-      this.productService.deleteProduct(id).subscribe({
-        next: () => {
-          alert('Product deleted successfully!');
-          this.loadProducts(); // Reload products
-        },
-        error: (err) => alert('Error deleting product'),
-      });
-    }
-  }
+deleteProduct(id: string) {
+  const confirmed = confirm('Are you sure you want to delete this product?');
+  if (!confirmed) return;
+
+  this.productService.deleteProduct(id).subscribe({
+    next: () => {
+      this.showToast('Product deleted successfully!', 'success');
+      this.loadProducts(); // Refresh list
+    },
+    error: (err) => {
+      console.error('Delete error:', err);
+      this.showToast('Error deleting product', 'error');
+    },
+  });
+}
+
+
+
+
 }

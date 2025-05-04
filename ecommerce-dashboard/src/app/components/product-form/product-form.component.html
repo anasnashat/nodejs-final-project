@@ -1,7 +1,13 @@
 <div class="container py-5">
+    <!-- Alert message -->
+    <div *ngIf="showAlert" class="alert alert-{{alertType}} alert-dismissible fade show" role="alert">
+      {{ alertMessage }}
+      <button type="button" class="btn-close" aria-label="Close" (click)="showAlert = false"></button>
+    </div>
+    <!-- Form for creating a new product -->
     <div class="card shadow border-0 mx-auto" style="max-width: 700px;">
       <div class="card-header bg-success text-white">
-        <h4 class="mb-0">Create Product</h4>
+        <h3 class="mb-0 text-center">Create Product</h3>
       </div>
       <div class="card-body">
         <form (submit)="onSubmit()" enctype="multipart/form-data">
@@ -14,6 +20,11 @@
             <label for="price" class="form-label">Price</label>
             <input type="number" [(ngModel)]="price" name="price" id="price" class="form-control" required />
           </div>
+
+          <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" [(ngModel)]="stock" name="stock" id="stock" class="form-control" required />
+          </div>          
   
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>

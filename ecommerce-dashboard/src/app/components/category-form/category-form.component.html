@@ -30,5 +30,10 @@
         </form>
       </div>
     </div>
+
+    <div *ngIf="showAlert" class="alert alert-{{alertType}} alert-dismissible fade show" role="alert">
+      {{ alertMessage }}
+      <button type="button" class="btn-close" aria-label="Close" (click)="showAlert = false"></button>
+    </div>
   </div>
   

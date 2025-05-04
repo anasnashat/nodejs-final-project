@@ -22,6 +22,10 @@ export class ProductFormComponent implements OnInit {
   sliderImages: File[] = [];
   sliderImagePreviews: string[] = [];
 
+  alertMessage: string = '';
+  alertType: 'success' | 'danger' = 'success';
+  showAlert: boolean = false;
+
   @ViewChild('sliderInput') sliderInputRef!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -58,6 +62,23 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit() {
+      // Basic form validation
+  if (!this.name || !this.description || !this.category || !this.mainImage) {
+    // Change error message dynamically based on which field is missing
+    if (!this.name) {
+      this.alertMessage = 'Product name is required.';
+    } else if (!this.description) {
+      this.alertMessage = 'Product description is required.';
+    } else if (!this.category) {
+      this.alertMessage = 'Please select a category.';
+    } else if (!this.mainImage) {
+      this.alertMessage = 'Main image is required.';
+    }
+
+    this.alertType = 'danger';
+    this.showAlert = true;
+    return;
+  }
     const formData = new FormData();
     formData.append('name', this.name);
     formData.append('price', this.price.toString());
@@ -71,8 +92,15 @@ export class ProductFormComponent implements OnInit {
     });
 
     this.productService.createProduct(formData).subscribe({
-      next: () => alert('Product created!'),
-      error: (err) => alert(err.error?.error || 'Error creating product'),
-    });
+      next: () => {
+        this.alertMessage = 'Product created successfully!';
+        this.alertType = 'success';
+        this.showAlert = true;
+      },
+      error: (err) => {
+        this.alertMessage = err.error?.error || 'Error creating product';
+        this.alertType = 'danger';
+        this.showAlert = true;
+  }});
   }
 }
