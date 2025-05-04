@@ -1,8 +1,9 @@
-const app = require('./app');
+const app = require('./app');  // Import app from the app.js file
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
-
-// Load environment variables
+const fs = require('fs');
+const path = require('path');
+// const express = require('express'); // Remove this line, as app is already imported
 dotenv.config();
 
 // Define port
@@ -22,3 +23,10 @@ process.on('unhandledRejection', (err) => {
   // Close server & exit process
   server.close(() => process.exit(1));
 });
+
+//  the 'uploads' directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('✅ Uploads directory created');
+}

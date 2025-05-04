@@ -1,0 +1,53 @@
+<div class="container py-5">
+    <div class="card shadow border-0 mx-auto" style="max-width: 700px;">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Create Product</h4>
+      </div>
+      <div class="card-body">
+        <form (submit)="onSubmit()" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="name" class="form-label">Product Name</label>
+            <input type="text" [(ngModel)]="name" name="name" id="name" class="form-control" required />
+          </div>
+  
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" [(ngModel)]="price" name="price" id="price" class="form-control" required />
+          </div>
+  
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea [(ngModel)]="description" name="description" id="description" class="form-control" rows="4" placeholder="Enter product description..."></textarea>
+          </div>
+  
+          <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select [(ngModel)]="category" name="category" id="category" class="form-select" required>
+              <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+            </select>
+          </div>
+  
+          <div class="mb-3">
+            <label for="mainImage" class="form-label">Main Image</label>
+            <input type="file" (change)="onMainImageChange($event)" id="mainImage" class="form-control" />
+          </div>
+  
+          <div class="mb-3">
+            <label for="sliderImages" class="form-label">Slider Images</label>
+            <input #sliderInput type="file" (change)="onSliderImagesChange($event); sliderInput.value=''" id="sliderImages" class="form-control" />
+            <div class="form-text">You can select one image at a time, and add multiple images.</div>
+          </div>
+  
+          <div class="mb-4" *ngIf="sliderImagePreviews.length > 0">
+            <label class="form-label">Selected Images:</label>
+            <div class="d-flex flex-wrap gap-2">
+              <img *ngFor="let preview of sliderImagePreviews" [src]="preview" class="rounded border" style="width: 120px; height: 80px; object-fit: cover;" />
+            </div>
+          </div>
+  
+          <button type="submit" class="btn btn-success w-100 py-2">Create Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

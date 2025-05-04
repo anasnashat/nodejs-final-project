@@ -1,0 +1,81 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Products</h3>
+    <span class="badge bg-primary">{{ products.length }} Products</span>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.name }}</td>
+          <td>
+            <img [src]="product.image" alt="Product Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+          </td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.price | currency }}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-warning me-2" (click)="editProduct(product)">
+              <i class="bi bi-pencil-square"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(product._id)">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div *ngIf="selectedProduct" class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Product</h5>
+          <button type="button" class="btn-close" (click)="selectedProduct = null"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="onUpdateProduct()">
+            <div class="mb-3">
+              <label for="name" class="form-label">Product Name</label>
+              <input id="name" [(ngModel)]="selectedProduct.name" name="name" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Product Description</label>
+              <textarea id="description" [(ngModel)]="selectedProduct.description" name="description" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Product Price</label>
+              <input id="price" type="number" [(ngModel)]="selectedProduct.price" name="price" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="productImage" class="form-label">Product Image</label>
+              <input #productImage id="productImage" type="file" (change)="onImageChange($event)" class="form-control" />
+              <div *ngIf="selectedProduct.image" class="mt-2">
+                <img [src]="selectedProduct.image" alt="Product Image" class="img-thumbnail" style="width: 80px; height: 80px;" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="sliderImages" class="form-label">Slider Images</label>
+              <input #sliderImagesInput id="sliderImages" type="file" (change)="onSliderImagesChange($event)" class="form-control" multiple />
+            </div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-success">Update</button>
+              <button type="button" class="btn btn-secondary ms-2" (click)="selectedProduct = null">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
