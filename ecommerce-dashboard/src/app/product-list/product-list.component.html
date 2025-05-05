@@ -21,7 +21,7 @@
         <tr *ngFor="let product of products">
           <td>{{ product.name }}</td>
           <td>
-            <img [src]="product.image" alt="Product Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+            <img [src]="product.imageUrl" alt="Product Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
           </td>
           <td>{{ product.description }}</td>
           <td>{{ product.price | currency }}</td>
@@ -70,8 +70,8 @@
             <div class="mb-3">
               <label for="productImage" class="form-label">Product Image</label>
               <input #productImage id="productImage" type="file" (change)="onImageChange($event)" class="form-control" />
-              <div *ngIf="selectedProduct.image" class="mt-2">
-                <img [src]="selectedProduct.image" alt="Product Image" class="img-thumbnail" style="width: 80px; height: 80px;" />
+              <div *ngIf="selectedProduct.imageUrl" class="mt-2">
+                <img [src]="selectedProduct.imageUrl" alt="Product Image" class="img-thumbnail" style="width: 80px; height: 80px;" />
               </div>
             </div>
             <div class="mb-3">

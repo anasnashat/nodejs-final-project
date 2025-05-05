@@ -7,12 +7,14 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
+    const sanitizedOriginalName = file.originalname
+      .replace(/\s+/g, '-')                 // Replace spaces with dashes
+      .replace(/[^a-zA-Z0-9.\-_]/g, '');    // Remove unsafe characters
+    const uniqueName = `${Date.now()}-${sanitizedOriginalName}`;
     cb(null, uniqueName);
   }
 });
 
-// Filter file types
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
