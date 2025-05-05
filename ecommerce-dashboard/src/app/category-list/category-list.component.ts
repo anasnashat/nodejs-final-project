@@ -14,7 +14,15 @@ export class CategoryListComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory: any = null;
 
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success'; 
   constructor(private categoryService: CategoryService) {}
+
+showToast(message: string, type: 'success' | 'error' = 'success') {  
+    this.toastMessage = message;
+    this.toastType = type;
+    setTimeout(() => this.toastMessage = '', 3000);
+  }
 
   ngOnInit() {
     this.loadCategories();
@@ -45,10 +53,14 @@ export class CategoryListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this category?')) {
       this.categoryService.deleteCategory(id).subscribe({
         next: () => {
-          alert('Category deleted successfully!');
+          this.showToast('Category deleted successfully!', 'success');
           this.loadCategories();
         },
-        error: (err) => alert(err.error?.error || 'Error deleting category')
+        error: (err) => {
+          this.showToast('Error deleting product', 'error');
+
+        }
+
       });
     }
   }
@@ -76,11 +88,14 @@ export class CategoryListComponent implements OnInit {
   
     this.categoryService.updateCategory(this.selectedCategory._id, formData).subscribe({
       next: (res) => {
-        alert('Category updated successfully!');
+        this.showToast('Category updated successfully!', 'success');
         this.selectedCategory = null;  // Close the modal
         this.loadCategories();  // Reload the categories list
       },
-      error: (err) => alert(err.error?.error || 'Error updating category')
+      error: (err) => { 
+        this.showToast('Error updating category', 'error');
+        console.error('Error updating category:', err);
+      }
     });
   }
 }  
