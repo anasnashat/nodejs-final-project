@@ -1,7 +1,6 @@
 const Product = require('../models/Product');
 const fs = require('fs');
 const path = require('path');
-
 // Create product
 exports.createProduct = async (req, res) => {
   try {
@@ -78,42 +77,50 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+
+// Update product
 // Update product
 exports.updateProduct = async (req, res) => {
   try {
-    const { name, price, description, category, stock } = req.body;
-    const productId = req.params.id;
+    const { name, description, price, category, stock } = req.body;
 
-    let updatedProductData = {
-      name,
-      price,
-      description,
-      category,
-      stock
-    };
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    // Handle the main image
+    // Update main image if uploaded
     if (req.files['image']) {
-      updatedProductData.image = req.files['image'][0].filename;
+      product.image = req.files['image'][0].filename;
     }
 
-    // Handle slider images
-    if (req.files['sliderImages']) {
-      updatedProductData.sliderImages = req.files['sliderImages'].map(file => file.filename);
+    // Append new slider images
+    if (req.files && req.files['sliderImages'] && req.files['sliderImages'].length > 0) {
+      const newSliderImages = req.files['sliderImages'].map(file => file.filename);
+      product.sliderImages = [...new Set([...product.sliderImages, ...newSliderImages])];
     }
+    
+    
 
-    const updatedProduct = await Product.findByIdAndUpdate(productId, updatedProductData, { new: true });
+    // Update other fields
+    product.name = name;
+    product.description = description;
+    product.price = price;
+    product.category = category;
+    product.stock = stock;
 
-    if (!updatedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    res.status(200).json(updatedProduct);
+    await product.save();
+    res.json(product);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+
+
+
+
+
 
 // Delete product
 exports.deleteProduct = async (req, res) => {
