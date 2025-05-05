@@ -88,17 +88,23 @@ onImageChange(event: any) {
 }
 
 // Handle slider images file changes
-onSliderImagesChange(event: any) {
-  const files = event.target.files as FileList; // Ensure files are of type FileList
-  if (this.selectedProduct) {
-    // Type assertion here as well
-    this.selectedProduct.sliderImages = Array.from(files); // Update the slider images array
-    this.sliderImagePreviews = Array.from(files).map((file) =>
-      URL.createObjectURL(file) // Preview slider images
-    );
-  }
-}
+newSliderImages: File[] = [];
+existingSliderImagePreviews: string[] = []; // for existing images
 
+onSliderImagesChange(event: any) {
+  const files = Array.from(event.target.files as FileList);
+  this.newSliderImages = files; // Store new files
+  
+  // Preview both existing and new images
+  this.sliderImagePreviews = [
+    ...(this.selectedProduct?.sliderImages || []).map((image: any) =>
+      typeof image === 'string'
+        ? `${environment.apiUrl}/uploads/${encodeURIComponent(image)}`
+        : URL.createObjectURL(image)
+    ),
+    ...files.map(file => URL.createObjectURL(file)) // Preview for new files
+  ];
+}
 
 onUpdateProduct() {
   if (this.selectedProduct) {
@@ -109,31 +115,32 @@ onUpdateProduct() {
     formData.append('category', typeof this.selectedProduct.category === 'string'
       ? this.selectedProduct.category
       : this.selectedProduct.category._id);
-    
     formData.append('stock', this.selectedProduct.stock.toString());
 
-    // Append main image if it exists
+    // Append main image file (if selected)
     const productImageFile = this.productImageInput.nativeElement.files[0];
     if (productImageFile) {
-      // Type assertion to ensure productImageFile is of type File
-      formData.append('image', productImageFile as Blob); // Append the File object directly
+      formData.append('image', productImageFile);
     }
 
-    // Append slider images if they exist
-    const sliderFiles = this.sliderImagesInput.nativeElement.files;
-    if (sliderFiles.length > 0) {
-      Array.from(sliderFiles).forEach((file) => {
-        // Type assertion to ensure each file is a valid File object
-        formData.append('sliderImages', file as Blob); // Append the File object directly
-      });
+    // Append only new slider image files
+    this.newSliderImages.forEach((file) => {
+      formData.append('sliderImages', file);
+    });
+
+    // Send existing slider image URLs in a separate field (as JSON string)
+    const existingImages = this.selectedProduct.sliderImages?.filter(img => typeof img === 'string') as string[];
+    if (existingImages && existingImages.length > 0) {
+      formData.append('existingSliderImages', JSON.stringify(existingImages));
     }
 
-    const productId = this.selectedProduct._id.replace(/[{}]/g, ''); // Clean the product ID
+    const productId = this.selectedProduct._id.replace(/[{}]/g, '');
     this.productService.updateProduct(productId, formData).subscribe({
       next: () => {
         this.showToast('✅ Product updated successfully!', 'success');
-        this.loadProducts(); // Reload products
-        this.selectedProduct = null; // Close the modal
+        this.loadProducts();
+        this.selectedProduct = null;
+        this.newSliderImages = []; // reset
       },
       error: (err) => {
         console.error('Error updating product:', err);
