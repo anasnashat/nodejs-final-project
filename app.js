@@ -27,10 +27,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const userRouters = require("./routes/authRoutes");
+
+
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth/users', userRouters);
+
 // Root route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the E-commerce API' });

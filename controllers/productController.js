@@ -2,7 +2,6 @@ const Product = require('../models/Product');
 const fs = require('fs');
 const path = require('path');
 
-
 // Create product
 exports.createProduct = async (req, res) => {
   try {
@@ -32,7 +31,7 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().populate('category');
-    
+
     // Add full image URLs for frontend display
     const productsWithImageUrls = products.map(product => ({
       ...product.toObject(),
@@ -46,24 +45,40 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// Get a single product
+// Get a single product with related products
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('category');
     if (!product) return res.status(404).json({ error: 'Product not found' });
 
-    res.json({
+    // Get related products from the same category (excluding current product)
+    const relatedProducts = await Product.find({
+      category: product.category._id,
+      _id: { $ne: product._id }
+    }).limit(4); // limit to 4 related
+
+    const formattedProduct = {
       ...product.toObject(),
       imageUrl: `http://localhost:5000/uploads/${product.image}`,
       sliderImageUrls: product.sliderImages.map(image => `http://localhost:5000/uploads/${image}`)
+    };
+
+    const formattedRelated = relatedProducts.map(p => ({
+      ...p.toObject(),
+      imageUrl: `http://localhost:5000/uploads/${p.image}`,
+      sliderImageUrls: p.sliderImages.map(img => `http://localhost:5000/uploads/${img}`)
+    }));
+
+    res.json({
+      product: formattedProduct,
+      relatedProducts: formattedRelated
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-
-
+// Update product
 exports.updateProduct = async (req, res) => {
   try {
     const { name, price, description, category, stock } = req.body;
@@ -79,12 +94,12 @@ exports.updateProduct = async (req, res) => {
 
     // Handle the main image
     if (req.files['image']) {
-      updatedProductData.image = req.files['image'][0].filename; // Store the filename, not the full path
+      updatedProductData.image = req.files['image'][0].filename;
     }
 
     // Handle slider images
     if (req.files['sliderImages']) {
-      updatedProductData.sliderImages = req.files['sliderImages'].map(file => file.filename); // Store an array of filenames
+      updatedProductData.sliderImages = req.files['sliderImages'].map(file => file.filename);
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(productId, updatedProductData, { new: true });
@@ -100,7 +115,6 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-
 // Delete product
 exports.deleteProduct = async (req, res) => {
   try {
@@ -113,14 +127,14 @@ exports.deleteProduct = async (req, res) => {
     if (product.image) {
       const imagePath = path.join(__dirname, '..', 'uploads', product.image);
       if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath); // Delete main image
+        fs.unlinkSync(imagePath);
       }
     }
 
     product.sliderImages.forEach(sliderImage => {
       const sliderImagePath = path.join(__dirname, '..', 'uploads', sliderImage);
       if (fs.existsSync(sliderImagePath)) {
-        fs.unlinkSync(sliderImagePath); // Delete slider images
+        fs.unlinkSync(sliderImagePath);
       }
     });
 
