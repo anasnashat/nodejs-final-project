@@ -68,6 +68,12 @@
               <input id="stock" type="number" [(ngModel)]="selectedProduct.stock" name="stock" class="form-control" required />
             </div>
             <div class="mb-3">
+              <label for="category" class="form-label">Product Category</label>
+              <select id="category" [(ngModel)]="selectedProduct.category" name="category" class="form-select" required>
+                <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
               <label for="productImage" class="form-label">Product Image</label>
               <input #productImage id="productImage" type="file" (change)="onImageChange($event)" class="form-control" />
               <div *ngIf="selectedProduct.imageUrl" class="mt-2">

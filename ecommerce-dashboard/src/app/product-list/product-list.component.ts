@@ -68,7 +68,7 @@ export class ProductListComponent implements OnInit {
 
   // Open the modal with the selected product for editing
   editProduct(product: Product) {
-    this.selectedProduct = { ...product };  // Clone the product to avoid direct mutation
+    this.selectedProduct = { ...product }; // Clone the product to avoid direct mutation
     this.sliderImagePreviews = product.sliderImages?.map(image => {
       if (typeof image === 'string') {
         return `${environment.apiUrl}/uploads/${encodeURIComponent(image)}`;
@@ -106,7 +106,10 @@ onUpdateProduct() {
     formData.append('name', this.selectedProduct.name);
     formData.append('price', this.selectedProduct.price.toString());
     formData.append('description', this.selectedProduct.description);
-    formData.append('category', this.selectedProduct.category._id);
+    formData.append('category', typeof this.selectedProduct.category === 'string'
+      ? this.selectedProduct.category
+      : this.selectedProduct.category._id);
+    
     formData.append('stock', this.selectedProduct.stock.toString());
 
     // Append main image if it exists
