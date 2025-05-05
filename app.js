@@ -34,8 +34,9 @@ const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth/users', authRoutes);
-app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
+// app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
 
+app.use("/api/users",  userRoutes);
 // Root route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the E-commerce API' });

@@ -9,7 +9,7 @@ require("dotenv").config();
 const SignUp = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
       return next(new AppError("Please Provide All Requirements", 505));
     }
 
@@ -20,10 +20,12 @@ const SignUp = async (req, res, next) => {
     const verifiedCode = crypto.randomBytes(3).toString("hex");
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const profileImage = req.file ? req.file.path : 'uploads/profile.png';
     const user = await User.create({
       name,
       email,
       role,
+      profileImage,
       password: hashedPassword,
       verifiedCode: verifiedCode,
       verifiedCodeVaildation: Number(Date.now() + 30 * 60 * 60 * 1000),
