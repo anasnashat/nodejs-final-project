@@ -26,13 +26,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
-const userRouters = require("./routes/authRoutes");
-
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
 
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/auth/users', userRouters);
+app.use('/api/auth/users', authRoutes);
+app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
 
 // Root route
 app.get('/', (req, res) => {

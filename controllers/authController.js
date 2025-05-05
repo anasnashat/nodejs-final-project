@@ -8,10 +8,11 @@ require("dotenv").config();
 
 const SignUp = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) {
       return next(new AppError("Please Provide All Requirements", 505));
     }
+
     const existEmail = await User.findOne({ email });
     if (existEmail) {
       return next(new AppError("Please Login this email already Exist", 400));
@@ -22,11 +23,12 @@ const SignUp = async (req, res, next) => {
     const user = await User.create({
       name,
       email,
-
+      role,
       password: hashedPassword,
       verifiedCode: verifiedCode,
       verifiedCodeVaildation: Number(Date.now() + 30 * 60 * 60 * 1000),
     });
+   
     const verificationLink = `http://localhost:${process.env.PORT}/api/auth/users/verify?email=${email}&code=${verifiedCode}`;
 
     await sendEmail(
@@ -111,7 +113,7 @@ const forgetPassword = async (req, res, next) => {
     }
     const resetCode = crypto.randomBytes(3).toString("hex");
     user.forgetpasswordCode = resetCode;
-    user.forgetPasswordVaildation = Date.now() + 30 * 60 *60*1000;
+    user.forgetPasswordVaildation = Date.now() + 30 * 60 * 60 * 1000;
     user.save();
     await sendEmail(
       email,
@@ -135,7 +137,7 @@ const resetPassword = async (req, res, next) => {
     if (!user) {
       return next(new AppError("User Not Found", 404));
     }
-    console.log(Date.now(),user.forgetPasswordVaildation)
+    console.log(Date.now(), user.forgetPasswordVaildation);
     if (
       user.forgetpasswordCode != code ||
       Date.now() > user.forgetPasswordVaildation
