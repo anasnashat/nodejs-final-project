@@ -26,10 +26,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
+const cartRouters = require("./routes/cartRoutes");
+const orderRoutes = require('./routes/orderRoutes');
 
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRouters)
+app.use('/api/orders', orderRoutes);
 
 // Root route
 app.get('/', (req, res) => {
