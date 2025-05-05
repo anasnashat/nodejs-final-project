@@ -77,7 +77,6 @@ export class ProductListComponent implements OnInit {
   // Open the modal with the selected product for editing
   editProduct(product: Product) {
     this.selectedProduct = { ...product }; // Clone the product to avoid direct mutation
-<<<<<<< HEAD
     this.sliderImagePreviews =
       product.sliderImages?.map((image) => {
         if (typeof image === 'string') {
@@ -94,64 +93,9 @@ export class ProductListComponent implements OnInit {
     if (file && this.selectedProduct) {
       // Type assertion here
       this.selectedProduct.image = URL.createObjectURL(file); // Update the preview URL
-=======
-    this.sliderImagePreviews = product.sliderImages?.map(image => {
-      if (typeof image === 'string') {
-        return `${environment.apiUrl}/uploads/${encodeURIComponent(image)}`;
-      } else {
-        return URL.createObjectURL(image);
-      }
-    }) || []; // Preload slider image previews
-  }
-
-// Handle image file changes
-onImageChange(event: any) {
-  const file = event.target.files[0]; // The file should be of type File
-  if (file && this.selectedProduct) {
-    // Type assertion here
-    this.selectedProduct.image = URL.createObjectURL(file); // Update the preview URL
-  }
-}
-
-// Handle slider images file changes
-newSliderImages: File[] = [];
-existingSliderImagePreviews: string[] = []; // for existing images
-
-onSliderImagesChange(event: any) {
-  const files = Array.from(event.target.files as FileList);
-  this.newSliderImages = files; // Store new files
-  
-  // Preview both existing and new images
-  this.sliderImagePreviews = [
-    ...(this.selectedProduct?.sliderImages || []).map((image: any) =>
-      typeof image === 'string'
-        ? `${environment.apiUrl}/uploads/${encodeURIComponent(image)}`
-        : URL.createObjectURL(image)
-    ),
-    ...files.map(file => URL.createObjectURL(file)) // Preview for new files
-  ];
-}
-
-onUpdateProduct() {
-  if (this.selectedProduct) {
-    const formData = new FormData();
-    formData.append('name', this.selectedProduct.name);
-    formData.append('price', this.selectedProduct.price.toString());
-    formData.append('description', this.selectedProduct.description);
-    formData.append('category', typeof this.selectedProduct.category === 'string'
-      ? this.selectedProduct.category
-      : this.selectedProduct.category._id);
-    formData.append('stock', this.selectedProduct.stock.toString());
-
-    // Append main image file (if selected)
-    const productImageFile = this.productImageInput.nativeElement.files[0];
-    if (productImageFile) {
-      formData.append('image', productImageFile);
->>>>>>> 5059b4de4676d37d1da1d1a7188b84f830e8369d
     }
   }
 
-<<<<<<< HEAD
   // Handle slider images file changes
   onSliderImagesChange(event: any) {
     const files = event.target.files as FileList; // Ensure files are of type FileList
@@ -202,32 +146,6 @@ onUpdateProduct() {
         },
       });
     }
-=======
-    // Append only new slider image files
-    this.newSliderImages.forEach((file) => {
-      formData.append('sliderImages', file);
-    });
-
-    // Send existing slider image URLs in a separate field (as JSON string)
-    const existingImages = this.selectedProduct.sliderImages?.filter(img => typeof img === 'string') as string[];
-    if (existingImages && existingImages.length > 0) {
-      formData.append('existingSliderImages', JSON.stringify(existingImages));
-    }
-
-    const productId = this.selectedProduct._id.replace(/[{}]/g, '');
-    this.productService.updateProduct(productId, formData).subscribe({
-      next: () => {
-        this.showToast('✅ Product updated successfully!', 'success');
-        this.loadProducts();
-        this.selectedProduct = null;
-        this.newSliderImages = []; // reset
-      },
-      error: (err) => {
-        console.error('Error updating product:', err);
-        this.showToast('❌ Error updating product!', 'error');
-      },
-    });
->>>>>>> 5059b4de4676d37d1da1d1a7188b84f830e8369d
   }
 
   deleteProduct(id: string) {
