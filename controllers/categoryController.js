@@ -19,7 +19,11 @@ exports.createCategory = async (req, res) => {
 exports.getAllCategories = async (req, res) => {
   try {
     const categories = await Category.find();
-    res.json(categories);
+    const updatedCategories = categories.map(cat => ({
+      ...cat._doc,
+      imageUrl: `${req.protocol}://${req.get('host')}/uploads/${cat.image}`
+    }));
+    res.json(updatedCategories);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -30,11 +34,18 @@ exports.getCategoryById = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category) return res.status(404).json({ error: 'Category not found' });
-    res.json(category);
+
+    const categoryWithUrl = {
+      ...category._doc,
+      imageUrl: `${req.protocol}://${req.get('host')}/uploads/${category.image}`
+    };
+
+    res.json(categoryWithUrl);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Update category
 exports.updateCategory = async (req, res) => {
