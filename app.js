@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
@@ -26,11 +26,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
-
+const userRouters = require("./routes/authRoutes");
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-
+app.use('/api/auth/users', userRouters);
 // Root route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the E-commerce API' });
@@ -46,6 +46,15 @@ mongoose.connect(process.env.MONGO_URI, {
   app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 }).catch(err => {
   console.error('Database connection error:', err);
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    status: "error",
+    message: err.message,
+    errors: err.errors || [],
+  });
 });
 
 module.exports = app; // Export the app for testing purposes
