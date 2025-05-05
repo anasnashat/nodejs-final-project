@@ -1,11 +1,13 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="mb-0">Products</h3>
-    <span class="badge bg-primary">{{ products.length }} Products</span>
+<div class="container py-5">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">🛒 Product Management</h2>
+    <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm">{{ products.length }} Products</span>
   </div>
 
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-hover align-middle">
+  <!-- Table -->
+  <div class="table-responsive shadow rounded bg-white p-3">
+    <table class="table table-hover align-middle mb-0">
       <thead class="table-light">
         <tr>
           <th>Name</th>
@@ -14,25 +16,31 @@
           <th>Price</th>
           <th>Stock</th>
           <th>Category</th>
+          <th>Slider Images</th>
           <th class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let product of products">
-          <td>{{ product.name }}</td>
+          <td class="fw-semibold">{{ product.name }}</td>
           <td>
-            <img [src]="product.image" alt="Product Image" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+            <img [src]="product.imageUrl" alt="Product" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;" />
           </td>
-          <td>{{ product.description }}</td>
+          <td style="max-width: 200px;" class="text-truncate">{{ product.description }}</td>
           <td>{{ product.price | currency }}</td>
           <td>{{ product.stock }}</td>
           <td>{{ product.category.name }}</td>
+          <td>
+            <div class="d-flex flex-wrap gap-1">
+              <img *ngFor="let image of product.sliderImageUrls" [src]="image" class="rounded border" style="width: 40px; height: 40px; object-fit: cover;" />
+            </div>
+          </td>
           <td class="text-end">
-            <button class="btn btn-sm btn-outline-warning me-2" (click)="editProduct(product)">
-              <i class="bi bi-pencil-square"></i> Edit
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="editProduct(product)" title="Edit">
+              <i class="bi bi-pencil-square"></i>
             </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(product._id)">
-              <i class="bi bi-trash"></i> Delete
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(product._id)" title="Delete">
+              <i class="bi bi-trash"></i>
             </button>
           </td>
         </tr>
@@ -40,80 +48,71 @@
     </table>
   </div>
 
-  <!-- Edit Product Modal -->
-<!-- Edit Product Modal -->
-<div *ngIf="selectedProduct" class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content shadow">
+  <!-- Modal -->
+  <div *ngIf="selectedProduct" class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded shadow-sm">
         <div class="modal-header">
           <h5 class="modal-title">Edit Product</h5>
           <button type="button" class="btn-close" (click)="selectedProduct = null"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="onUpdateProduct()">
-            <div class="mb-3">
-              <label for="name" class="form-label">Product Name</label>
-              <input id="name" [(ngModel)]="selectedProduct.name" name="name" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Product Description</label>
-              <textarea id="description" [(ngModel)]="selectedProduct.description" name="description" class="form-control" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="price" class="form-label">Product Price</label>
-              <input id="price" type="number" [(ngModel)]="selectedProduct.price" name="price" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="stock" class="form-label">Product Stock</label>
-              <input id="stock" type="number" [(ngModel)]="selectedProduct.stock" name="stock" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="productImage" class="form-label">Product Image</label>
-              <input #productImage id="productImage" type="file" (change)="onImageChange($event)" class="form-control" />
-              <div *ngIf="selectedProduct.image" class="mt-2">
-                <img [src]="selectedProduct.image" alt="Product Image" class="img-thumbnail" style="width: 80px; height: 80px;" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Product Name</label>
+                <input type="text" [(ngModel)]="selectedProduct.name" name="name" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Price</label>
+                <input type="number" [(ngModel)]="selectedProduct.price" name="price" class="form-control" required />
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Description</label>
+                <textarea [(ngModel)]="selectedProduct.description" name="description" class="form-control" rows="2" required></textarea>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Stock</label>
+                <input type="number" [(ngModel)]="selectedProduct.stock" name="stock" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <select [(ngModel)]="selectedProduct.category" name="category" class="form-select" required>
+                  <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Product Image</label>
+                <input type="file" #productImage (change)="onImageChange($event)" class="form-control" />
+                <img *ngIf="selectedProduct.imageUrl" [src]="selectedProduct.imageUrl" class="img-thumbnail mt-2" style="width: 70px;" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Slider Images</label>
+                <input type="file" #sliderImagesInput (change)="onSliderImagesChange($event)" class="form-control" multiple />
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                  <img *ngFor="let preview of sliderImagePreviews" [src]="preview" class="img-thumbnail" style="width: 60px;" />
+                </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="sliderImages" class="form-label">Slider Images</label>
-              <input #sliderImagesInput id="sliderImages" type="file" (change)="onSliderImagesChange($event)" class="form-control" multiple />
-            </div>
-            <div class="text-end">
-              <button type="submit" class="btn btn-success">Update</button>
-              <button type="button" class="btn btn-secondary ms-2" (click)="selectedProduct = null">Cancel</button>
+            <div class="text-end mt-4">
+              <button type="submit" class="btn btn-success px-4">Update</button>
+              <button type="button" class="btn btn-secondary ms-2 px-4" (click)="selectedProduct = null">Cancel</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- Toast Notification -->
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
-    <div
-      *ngIf="toastMessage"
-      class="toast show align-items-center text-white"
-      [ngClass]="{
-        'bg-success': toastType === 'success',
-        'bg-danger': toastType === 'error'
-      }"
-      role="alert"
-    >
+    <div *ngIf="toastMessage" class="toast show text-white align-items-center"
+      [ngClass]="{ 'bg-success': toastType === 'success', 'bg-danger': toastType === 'error' }"
+      role="alert">
       <div class="d-flex">
         <div class="toast-body">{{ toastMessage }}</div>
-        <button
-          type="button"
-          class="btn-close btn-close-white me-2 m-auto"
-          (click)="toastMessage = ''"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="toastMessage = ''" aria-label="Close"></button>
       </div>
     </div>
   </div>
-
-  
-
-
-
-  
-  
 </div>

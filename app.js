@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
@@ -26,14 +26,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
-const cartRouters = require("./routes/cartRoutes");
-const orderRoutes = require('./routes/orderRoutes');
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
 
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/cart', cartRouters)
-app.use('/api/orders', orderRoutes);
+app.use('/api/auth/users', authRoutes);
+app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -50,6 +51,15 @@ mongoose.connect(process.env.MONGO_URI, {
   app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 }).catch(err => {
   console.error('Database connection error:', err);
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    status: "error",
+    message: err.message,
+    errors: err.errors || [],
+  });
 });
 
 module.exports = app; // Export the app for testing purposes

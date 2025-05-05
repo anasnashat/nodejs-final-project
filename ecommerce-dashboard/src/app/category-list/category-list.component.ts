@@ -3,6 +3,7 @@ import { CategoryService } from '../services/category.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Category } from '../category'; // Adjust path if needed
+import {environment} from '../../environments/environment'; // Adjust path if needed
 
 @Component({
   selector: 'app-category-list',
@@ -34,7 +35,7 @@ showToast(message: string, type: 'success' | 'error' = 'success') {
         // Prefix the image path with the full URL
         this.categories = data.map(category => ({
           ...category,
-          imageUrl: category.image ? `http://localhost:5000/uploads/${category.image}` : null
+          imageUrl: category.image ? `${environment.apiUrl}/uploads/${encodeURIComponent(category.image)}` : null
         }));
       },
       error: (error) => {
@@ -65,37 +66,39 @@ showToast(message: string, type: 'success' | 'error' = 'success') {
     }
   }
 
-  // Handle image file change
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedCategory.image = file;
+  
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedCategory.imageUrl = e.target.result; // Show new image preview
+      };
+      reader.readAsDataURL(file);
     }
   }
-
+  
   // Update category
   onUpdateCategory() {
     const formData = new FormData();
     formData.append('name', this.selectedCategory.name);
   
-    // Only append image if a new image is selected
-    if (this.selectedCategory.image) {
-      formData.append('image', this.selectedCategory.image);
-    } else {
-      // If no new image, keep the old image's URL
-      formData.append('image', this.selectedCategory.imageUrl); // Keep old image URL if no new image is selected
+    if (this.selectedCategory.image instanceof File) {
+      formData.append('image', this.selectedCategory.image); // Only send if new file
     }
   
     this.categoryService.updateCategory(this.selectedCategory._id, formData).subscribe({
-      next: (res) => {
+      next: () => {
         this.showToast('Category updated successfully!', 'success');
-        this.selectedCategory = null;  // Close the modal
-        this.loadCategories();  // Reload the categories list
+        this.selectedCategory = null;
+        this.loadCategories();
       },
-      error: (err) => { 
+      error: (err) => {
         this.showToast('Error updating category', 'error');
         console.error('Error updating category:', err);
       }
     });
   }
+  
 }  
