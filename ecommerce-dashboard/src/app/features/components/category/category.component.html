@@ -1,0 +1,9 @@
+<div class="container-fluid p-5">
+    <h3 class="fw-bold text-center m-4">Shop By Categories</h3>
+    <div class="d-flex justify-content-center flex-wrap gap-4 p-5 mt-5">
+      <div *ngFor="let category of allCategories | slice:0:3" class="d-flex justify-content-between">
+        <app-category-card [category]="category"></app-category-card>
+      </div>
+    </div>
+</div>
+  

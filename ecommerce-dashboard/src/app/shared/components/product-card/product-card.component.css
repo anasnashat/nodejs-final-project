@@ -1,0 +1,38 @@
+.product-card {
+    transition: transform 0.3s ease;
+  }
+  
+  .product-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .icon-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+  
+  .product-name {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: 600;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .product-card:hover .icon-overlay,
+  .product-card:hover .product-name {
+    opacity: 1;
+  }
+  
+  .icon-overlay i {
+    color: rgb(209, 177, 139);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .icon-overlay i:hover {
+    background-color: rgb(209, 177, 139);
+    color: rgb(115, 105, 105);
+  }
+  

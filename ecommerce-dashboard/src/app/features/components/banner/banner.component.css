@@ -1,0 +1,9 @@
+.position-absolute {
+    z-index: 10;
+  }
+  
+  img {
+    object-fit: cover;
+    height: 100vh;
+  }
+  

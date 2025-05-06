@@ -15,7 +15,7 @@ export class CategoryService {
   }
 
   // Get all categories
-  getCategories(): Observable<Category[]> {
+  getCategories(): Observable<any[]> {
     return this._httpClient.get<Category[]>(this.API);
   }
 

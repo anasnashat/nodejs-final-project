@@ -1,0 +1,31 @@
+/* Category Page Styles */
+.container-fluid {
+    background-color: #f9f9f9;
+  }
+  
+  h3 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  input.form-control {
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  input.form-control:focus {
+    border-color: #8b5e3c; /* Customize this to match your theme */
+  }
+  
+  .app-category-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .app-category-card:hover {
+    transform: scale(1.05);
+  }
+  
