@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Product } from '../../../product';
+import { Product } from '../../../interfaces/product';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
 import { ProductService } from '../../../services/product.service';
 import { FormsModule } from '@angular/forms';

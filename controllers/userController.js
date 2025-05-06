@@ -9,7 +9,8 @@ const createUser = async (req, res, next) => {
     if (!name || !password || !email) {
       return next(new AppError("You Must Provide All requirements"));
     }
-    const user = await User.create({ name, password, email });
+    const profileImage = req.file ? req.file.path : "/uploads/profile.png";
+    const user = await User.create({ name, password, email, profileImage });
     res.status(201).json({
       message: "create user successfully",
       data: user,
@@ -21,13 +22,21 @@ const createUser = async (req, res, next) => {
 //get all users
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.where("role").equals("user");
+    const users = await User.where("role").equals("user").select('+profileImage');
+    console.log(users);
     if (!users) {
       return next(new AppError("Users Not Found", 404));
     }
+    const usersWithProfileImage = users.map((user) => ({
+      ...user.toObject(),
+      profileImage: user.profileImage
+        ? `http://localhost:5000/${user.profileImage.replace(/^\/+/, "")}`
+        : `http://localhost:5000/uploads/profile.png`,
+    }));
+
     res.status(200).json({
       message: "Users returned Successfully",
-      data: users,
+      data: usersWithProfileImage,
       results: users.length,
     });
   } catch (err) {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CategoryService } from '../../../services/category.service';
-import { Category } from '../../../category';
+import { Category } from '../../../interfaces/category';
 import { CategoryCardComponent } from '../../../shared/components/category-card/category-card.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

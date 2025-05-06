@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
     },
     profileImage: {
         type: String,
+        default:"/uploads/profile.png",
         select:false
     },
     role: {

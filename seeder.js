@@ -8,14 +8,14 @@ const User = require('./models/User');
 const seed = async () => {
     await mongoose.connect(process.env.MONGO_URI);
 
-    await User.create([
-        {
-            'name':'admin',
-            'email':'admin@admin.com',
-            'password':'admin',
-            'role':'admin'
-        }
-    ]);
+    // await User.create([
+    //     {
+    //         'name':'admin',
+    //         'email':'admin@admin.com',
+    //         'password':'admin',
+    //         'role':'admin'
+    //     }
+    // ]);
     // await Product.create([
     //     { name: 'Nike Air Max', description: "Shoes", price: 100, category: "68164d0eb87894386590473a", image: "test", stock: 10 },
     //     { name: 'Adidas Ultraboost', description: "Shoes", price: 120, category: "68164d0eb87894386590473a", image: "test", stock: 15 },

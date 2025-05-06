@@ -1,0 +1,46 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Products</h3>
+    <span class="badge bg-primary">{{ allusers.length }} Users Added </span>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Approved</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of allusers; track user._id) {
+        <tr>
+          <td>
+            <img
+              [src]="user.profileImage"
+              alt="Product Image"
+              class="img-thumbnail"
+              style="width: 60px; height: 60px; object-fit: cover"
+            />
+          </td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          @if(user.verified){
+            <td class="!text-green-800"><a>Approved</a></td>
+          }@else {
+            <td class="text-red-800">Not Approved</td>
+          }
+          
+
+          <td class="text-end">
+            <!-- Actions -->
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

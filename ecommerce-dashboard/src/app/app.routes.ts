@@ -4,6 +4,7 @@ import { ProductFormComponent } from './components/product-form/product-form.com
 import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
+import { ShowUsersComponent } from './users/show-users/show-users.component';
 
 export const routes: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -16,7 +17,8 @@ export const routes: Routes = [
       { path: 'categories', component: CategoryFormComponent },
       { path: 'products', component: ProductFormComponent },
       {path:'showCategories',component:CategoryListComponent},
-      {path:'showProducts',component:ProductListComponent},
+      { path: 'showProducts', component: ProductListComponent },
+      {path:'showUsers',component:ShowUsersComponent,title:"Users"},
       { path: '', redirectTo: 'categories', pathMatch: 'full' }
     ]},
 ];

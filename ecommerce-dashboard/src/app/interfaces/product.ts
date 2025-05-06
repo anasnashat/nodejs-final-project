@@ -1,4 +1,4 @@
-import { Category } from "./category";
+import { Category } from '../interfaces/category';
 
 export interface Product {
   _id: string;
@@ -12,5 +12,3 @@ export interface Product {
   sliderImages: (File | string)[]; // This can also contain string (URLs) or File objects
   sliderImageUrls: string[]; // URLs of the slider images
 }
-
-  
