@@ -5,20 +5,59 @@ import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ShowUsersComponent } from './users/show-users/show-users.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
+import path from 'path';
 
 export const routes: Routes = [
-  {path:'',redirectTo:'home',pathMatch:'full'},
-  { path:'home',loadComponent:()=>import('./features/components/home/home.component').then(m=>m.HomeComponent)},
-  {path:'about',loadComponent:()=>import('./shared/components/about/about.component').then(m=>m.AboutComponent)},
-  {path:'categoryPage',loadComponent:()=>import('./features/components/category-page/category-page.component').then(m=>m.CategoryPageComponent)},
-  {path:'productPage',loadComponent:()=>import('./features/components/product-page/product-page.component').then(m=>m.ProductPageComponent)},
-  {path: 'dashboard',component: DashboardComponent,
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./features/components/home/home.component').then(
+        (m) => m.HomeComponent
+      ),
+  },
+  {
+    path: 'about',
+    loadComponent: () =>
+      import('./shared/components/about/about.component').then(
+        (m) => m.AboutComponent
+      ),
+  },
+  {
+    path: 'categoryPage',
+    loadComponent: () =>
+      import(
+        './features/components/category-page/category-page.component'
+      ).then((m) => m.CategoryPageComponent),
+  },
+  {
+    path: 'productPage',
+    loadComponent: () =>
+      import('./features/components/product-page/product-page.component').then(
+        (m) => m.ProductPageComponent
+      ),
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
     children: [
       { path: 'categories', component: CategoryFormComponent },
       { path: 'products', component: ProductFormComponent },
-      {path:'showCategories',component:CategoryListComponent},
+      { path: 'showCategories', component: CategoryListComponent },
       { path: 'showProducts', component: ProductListComponent },
-      {path:'showUsers',component:ShowUsersComponent,title:"Users"},
-      { path: '', redirectTo: 'categories', pathMatch: 'full' }
-    ]},
+      { path: 'showUsers', component: ShowUsersComponent, title: 'Users' },
+      { path: '', redirectTo: 'categories', pathMatch: 'full' },
+    ],
+  },
+  { path: 'login', component: LoginComponent, title: 'Login' },
+  {
+    path: 'register', component: RegisterComponent, title: 'Register' },
+  {
+    path: 'forget-password',
+    component: ForgetPasswordComponent,
+    title: 'forgetPassword',
+  },
 ];
