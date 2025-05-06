@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const SignUp = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, repassword, role } = req.body;
     if (!name || !email || !password) {
       return next(new AppError("Please Provide All Requirements", 505));
     }
@@ -17,20 +17,24 @@ const SignUp = async (req, res, next) => {
     if (existEmail) {
       return next(new AppError("Please Login this email already Exist", 400));
     }
+    if (password != repassword) {
+      return next(new AppError("Password doesn't Match", 403));
+    }
     const verifiedCode = crypto.randomBytes(3).toString("hex");
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const profileImage = req.file ? req.file.path : 'uploads/profile.png';
+    const profileImage = req.file ? req.file.path : "uploads/profile.png";
     const user = await User.create({
       name,
       email,
       role,
       profileImage,
       password: hashedPassword,
+      repassword:hashedPassword,
       verifiedCode: verifiedCode,
       verifiedCodeVaildation: Number(Date.now() + 30 * 60 * 60 * 1000),
     });
-   
+
     const verificationLink = `http://localhost:${process.env.PORT}/api/auth/users/verify?email=${email}&code=${verifiedCode}`;
 
     await sendEmail(
