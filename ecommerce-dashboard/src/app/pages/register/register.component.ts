@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -16,6 +16,8 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class RegisterComponent {
   _authservice = inject(AuthService);
+  _router = inject(Router);
+  apiError:string=''
 
   registerForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
@@ -32,9 +34,12 @@ export class RegisterComponent {
       this._authservice.register(this.registerForm.value).subscribe({
         next: (res) => {
           console.log(res);
+          this._router.navigate(["/login"]);
+
         },
         error: (err) => {
-          console.log(err);
+          console.log(err.error.message);
+          this.apiError = err.error.message;
         },
         complete() {
           console.log('Done signup');
@@ -43,5 +48,8 @@ export class RegisterComponent {
     } else {
       this.registerForm.markAllAsTouched();
     }
+  }
+  closeError() {
+    this.apiError = ''
   }
 }
