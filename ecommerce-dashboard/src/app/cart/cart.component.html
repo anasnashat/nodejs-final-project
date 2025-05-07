@@ -1,9 +1,57 @@
-<div>
 
-  @for (item of cartItems ; track item.id){
-  <div class="card mb-3" style="max-width: 540px;">
-      <h1> {{item}} </h1>
+<div class="container mt-4">
+  <h2>Your Cart</h2>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-    }
+    <p class="mt-2">Processing your order...</p>
+  </div>
+  <button class="btn btn-primary" (click)="checkout()" [disabled]="loading">
+    Proceed to Checkout
+  </button>
 
+  <div *ngIf="cartItems.length === 0 && !loading" class="alert alert-info">
+    Your cart is empty
+  </div>
+
+  <div *ngIf="cartItems.length > 0 && !loading">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>{{ item.product?.name }}</td>
+            <td>{{ item.product?.price | currency }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ (item.product?.price || 0) * item.quantity | currency }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+            <td><strong>{{ totalPrice | currency }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+      <button class="btn btn-primary" (click)="checkout()" [disabled]="loading">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
 </div>
