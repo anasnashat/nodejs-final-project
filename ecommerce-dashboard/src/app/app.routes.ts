@@ -40,6 +40,11 @@ export const routes: Routes = [
         (m) => m.ProductPageComponent
       ),
   },
+  { 
+    path: 'product/:id', 
+    loadComponent: () => import('./features/components/product-details/product-details.component')
+      .then((m) => m.ProductDetailsComponent) 
+  },  
   {
     path: 'dashboard',
     component: DashboardComponent,
