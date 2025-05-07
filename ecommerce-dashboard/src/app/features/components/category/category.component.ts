@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../../services/category.service';
+import { ProductService } from '../../../services/product.service';
+import { Product } from '../../../interfaces/product';
 import { Category } from '../../../interfaces/category';
 import { CategoryCardComponent } from '../../../shared/components/category-card/category-card.component';
 import { CommonModule } from '@angular/common';
@@ -15,6 +17,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class CategoryComponent implements OnInit {
   allCategories: Category[] = [];
+  allProducts: Product[] = [];
+  selectedCategory: string = '';
+  filteredRelatedProducts: any[] = [];
 
   constructor(private _categoryService: CategoryService) {}
 
@@ -37,4 +42,5 @@ export class CategoryComponent implements OnInit {
       }
     });
   }
+
 }

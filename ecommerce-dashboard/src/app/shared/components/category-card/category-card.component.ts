@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input} from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -10,4 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CategoryCardComponent {
   @Input() category: any;
+  constructor(private router: Router) {}
+  goToRelatedProducts() {
+    this.router.navigate(['/category', this.category.name, 'related-products']);
+  }
 }

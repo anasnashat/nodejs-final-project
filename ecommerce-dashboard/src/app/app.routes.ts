@@ -44,7 +44,12 @@ export const routes: Routes = [
     path: 'product/:id', 
     loadComponent: () => import('./features/components/product-details/product-details.component')
       .then((m) => m.ProductDetailsComponent) 
-  },  
+  }, 
+  {
+    path:'category/:name/related-products',
+    loadComponent: () => import('./features/components/related-products/related-products.component')
+      .then((m) => m.RelatedProductsComponent)
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
