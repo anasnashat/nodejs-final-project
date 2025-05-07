@@ -1,11 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  apiError: string = '';
+  _authservice = inject(AuthService);
+  _router = inject(Router);
+  loginForm: FormGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
+  });
 
+  login() {
+    if (this.loginForm.valid) {
+      this._authservice.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          console.log(res);
+          if (res.user.role === 'user') {
+            this._router.navigate(['/home']);
+          } else {
+            this._router.navigate(['/dashboard'])
+          }
+        },
+        error: (err) => {
+          console.log(err.error.message);
+          
+        },
+        complete() {
+          console.log('Done Login');
+        },
+      });
+    } else {
+      this.loginForm.markAllAsTouched();
+    }
+  }
+  closeError() {
+   this.apiError=''
+ }
 }

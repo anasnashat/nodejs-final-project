@@ -11,4 +11,14 @@ export class UserserviceService {
   getAllUsers():Observable<any>{
     return this._httpClient.get(this.url);
   }
+
+  approveUser(_id:string): Observable<any>{
+    return this._httpClient.patch(`http://localhost:5000/api/auth/users/${_id}/approve`, _id);
+  }
+
+  deleteUser(_id: string): Observable<any>{
+    return this._httpClient.delete(
+      `http://localhost:5000/api/users/${_id}`
+    );
+  }
 }

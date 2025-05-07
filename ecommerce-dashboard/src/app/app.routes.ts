@@ -9,6 +9,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import path from 'path';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -70,4 +71,5 @@ export const routes: Routes = [
     component: ForgetPasswordComponent,
     title: 'forgetPassword',
   },
+  {path:'reset-password',component:ResetPasswordComponent,title:"reset Password"}
 ];
