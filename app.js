@@ -13,7 +13,14 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json())
+// Special handling for Stripe webhook - needs raw body
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
@@ -28,15 +35,22 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
+// const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
+const cartRouters = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth/users', authRoutes);
 // app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
-
+app.use('/api/cart', cartRouters);
+app.use('/api/orders', orderRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use("/api/users",  userRoutes);
+
+
 // Root route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the E-commerce API' });
