@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const SignUp = async (req, res, next) => {
   try {
-    const { name, email, password, repassword, role } = req.body;
+    const { name, email, password, repassword, role} = req.body;
     if (!name || !email || !password) {
       return next(new AppError("Please Provide All Requirements", 505));
     }
@@ -30,12 +30,13 @@ const SignUp = async (req, res, next) => {
       role,
       profileImage,
       password: hashedPassword,
-      repassword:hashedPassword,
+      repassword: hashedPassword,
       verifiedCode: verifiedCode,
       verifiedCodeVaildation: Number(Date.now() + 30 * 60 * 60 * 1000),
+      
     });
 
-    const verificationLink = `http://localhost:${process.env.PORT}/api/auth/users/verify?email=${email}&code=${verifiedCode}`;
+    const verificationLink = `http://localhost:${process.env.PORT}/api/auth/users/verify-email?email=${email}&code=${verifiedCode}`;
 
     await sendEmail(
       email,
@@ -47,7 +48,14 @@ const SignUp = async (req, res, next) => {
 
     res.status(201).json({
       message: "User register successfully , please check your email account",
-      data: userResponse,
+      data: {
+        user: {
+          name: userResponse.name,
+          email: userResponse.email,
+          profileImage: userResponse.profileImage,
+          role:userResponse.role,
+        }
+      }
     });
   } catch (err) {
     next(new AppError(err.message, 500));
@@ -60,6 +68,9 @@ const Login = async (req, res, next) => {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return next(new AppError("can't find this user", 404));
+    }
+    if (!user.verified) {
+      return next(new AppError('Your Account Must be Verifed by Admin', 403));
     }
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched) {
@@ -74,6 +85,7 @@ const Login = async (req, res, next) => {
     res.send({
       status: "success",
       token,
+      user: user,
     });
   } catch (err) {
     next(new AppError(err.message, 500));
@@ -118,16 +130,21 @@ const forgetPassword = async (req, res, next) => {
       return next(new AppError("User Not Found", 404));
     }
     const resetCode = crypto.randomBytes(3).toString("hex");
-    user.forgetpasswordCode = resetCode;
-    user.forgetPasswordVaildation = Date.now() + 30 * 60 * 60 * 1000;
-    user.save();
+    await User.updateOne(
+      { _id: user._id },
+      {
+        forgetpasswordCode: resetCode,
+        forgetPasswordVaildation: Date.now() + 30 * 60 * 60 * 1000,
+      }
+    );
+
     await sendEmail(
       email,
       "Password Reset",
       `Use this code to reset Your Password ${resetCode}`
     );
     res.status(200).json({
-      message: "Password reset Successfully",
+      message: "we send code to email to reset password ",
     });
   } catch (err) {
     next(new AppError(err.message, 500));
@@ -136,14 +153,19 @@ const forgetPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   try {
-    const { email, code, newPassword } = req.body;
-    const user = await User.findOne({ email }).select(
-      "+forgetpasswordCode +forgetPasswordVaildation"
-    );
+    const { code, newPassword, repassword } = req.body;
+    if (newPassword != repassword) {
+      return next(new AppError("Password doesn't Match", 400));
+    }
+    const user = await User.findOne({
+      forgetpasswordCode: code,
+      forgetPasswordVaildation: { $gt: Date.now() },
+    }).select("+forgetpasswordCode +forgetPasswordVaildation");
+
     if (!user) {
       return next(new AppError("User Not Found", 404));
     }
-    console.log(Date.now(), user.forgetPasswordVaildation);
+
     if (
       user.forgetpasswordCode != code ||
       Date.now() > user.forgetPasswordVaildation
@@ -152,6 +174,7 @@ const resetPassword = async (req, res, next) => {
     }
     const newHasedPassword = await bcrypt.hash(newPassword, 10);
     user.password = newHasedPassword;
+    user.repassword = newHasedPassword;
     user.forgetpasswordCode = null;
     user.forgetPasswordVaildation = null;
     await user.save();
@@ -164,4 +187,26 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-module.exports = { SignUp, Login, verifiyEmail, forgetPassword, resetPassword };
+const approveUser = async (req, res, next)=>{
+  try {
+    const userId = req.params.id;
+    
+    const user = await User.findById(userId).select('+status');
+    if (!user) {
+      return next(new AppError("User Not Found",404))
+    }
+    if (user.status==='approved') {
+      return next(new AppError("User Already Approved"))
+    }
+    user.status = 'approved',
+      user.verified = true,
+      await user.save();
+    res.status(200).json({
+      message: "User has been Approved Successfully",
+      approvedUser:user
+    })
+  } catch (err) {
+    next (new AppError(err.message,500))
+  }
+}
+module.exports = { SignUp, Login, verifiyEmail, forgetPassword, resetPassword ,approveUser};
