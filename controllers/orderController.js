@@ -5,7 +5,7 @@ const assert = require("node:assert");
 
 const getOrder = async (req,res) => {
 
-    const userId = req.params.userId;
+    const userId = req.user.id;
     try {
         const orders = await Order.find({ user: userId }).populate('items.product');
         if (!orders || orders.length === 0) {
@@ -20,7 +20,7 @@ const getOrder = async (req,res) => {
 
 
 const createOrder = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.user.id;
     try{
         const { paymentMethod, shippingAddress } = req.body;
         const cart = await Cart.findOne({ user: userId }).populate('items.product');
