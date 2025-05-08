@@ -3,7 +3,8 @@ const AppError = require("../utils/AppError");
 const Jwt = require("jsonwebtoken");
 const verifiyUser = async (req, res, next) => {
   try {
-      const token = req.headers.authorization;
+      const token = req.headers.authorization?.split(" ")[1];
+    console.log(token)
     if (!token) {
       return next(new AppError("Invaild Credientals", 400));
     }
@@ -12,6 +13,7 @@ const verifiyUser = async (req, res, next) => {
       return next(new AppError("JWt not Found", 404));
     }
     const payload = Jwt.verify(token, secret);
+    console.log(payload)
     if (!payload) {
       return next(new AppError("Unathorized Uer", 403));
     }
