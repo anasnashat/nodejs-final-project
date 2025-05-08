@@ -6,6 +6,7 @@ export interface userData{
     role: string,
     createdAt: string,
     verified: boolean,
-    profileImage:string
+    profileImage: string,
+    status:string
     
 }

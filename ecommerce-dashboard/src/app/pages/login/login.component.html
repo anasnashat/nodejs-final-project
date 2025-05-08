@@ -1,5 +1,84 @@
-<div class="position-relative">
-    
-    
+<div class="position-relative rounded">
+  <div class="form">
+    <div>
+      <img src="assets/login.jpeg" alt="" />
+    </div>
+    <div>
+        <div class="error-container mb-4">
+        @if (apiError) {
+        <div class="alert-error">
+          {{ apiError }}
+          <button type="button" class="close-btn" (click)="closeError()">
+            &times;
+          </button>
+        </div>
+        }
+      </div>
+      <form action="" [formGroup]="loginForm" (ngSubmit)="login()">
+        <h5 class="fw-bold text-uppercase mb-3 text-center">Login up</h5>
+        <p class="text-center">Please fill this form to</p>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+          <label for="email">Email</label>
+          @if(loginForm.get('email')?.errors &&
+          loginForm.get('email')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(loginForm.get('email')?.getError('required')){
+            <p class="mb-0">Email is required</p>
+            }
+          </div>
+          }
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <label for="password">Password</label>
+          @if(loginForm.get('password')?.errors &&
+          loginForm.get('password')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(loginForm.get('password')?.getError('required')){
+            <p class="mb-0">Password is required</p>
+            }@else if (loginForm.get('name')?.getError('minlength')) {
+            <p class="mb-0">
+              Required Length is
+              {{
+                loginForm.get("password")?.getError("minlength").requiredLength
+              }}
+            </p>
+            }
+          </div>
+          }
+        </div>
+        <div class="d-flex">
+          <a
+            routerLink="/forget-password"
+            class="ms-auto"
+            style="color: rgb(209, 177, 139)"
+          >
+            Forget Password
+          </a>
+        </div>
+
+        <button class="btn" [disabled]="loginForm.invalid">Login</button>
+        <p class="my-3 d-flex">
+          Already Have An Account ?
+          <a style="color: rgb(209, 177, 139)" routerLink="/register">
+            Register</a
+          >
+        </p>
+      </form>
+    </div>
+  </div>
 </div>
-  
