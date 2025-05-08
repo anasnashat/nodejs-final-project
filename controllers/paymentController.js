@@ -1,6 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
 const orderController = require('../controllers/orderController');
+const Cart = require('../models/Cart');
 
 /**
  * Create a checkout session with Stripe
@@ -78,7 +79,7 @@ const confirmPayment = async (req, res) => {
     // Find the order using metadata
     const orderId = session.metadata.orderId;
     const order = await Order.findById(orderId);
-
+    const cart = await Cart.find({ user: order.user }).populate('items.product');
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
@@ -95,6 +96,8 @@ const confirmPayment = async (req, res) => {
       };
 
       await order.save();
+      cart.items=[];
+      await cart.save();
     }
 
     res.status(200).json(order);

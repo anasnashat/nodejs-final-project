@@ -49,10 +49,6 @@ const createOrder = async (req, res) => {
 
         await order.save();
 
-        // Clear the cart
-        cart.items = [];
-        await cart.save();
-
         // Return different responses based on payment method
         if (paymentMethod === 'cash') {
             return res.status(201).json({
@@ -66,7 +62,7 @@ const createOrder = async (req, res) => {
                 message: 'Order created successfully. Please complete payment.',
                 nextStep: {
                     action: 'PAYMENT_REQUIRED',
-                    endpoint: `/api/payments/create-payment-intent/${userId}`,
+                    endpoint: `/api/payments/create-payment-intent/${userId}`
                 }
             });
         } else if (paymentMethod === 'paypal') {
