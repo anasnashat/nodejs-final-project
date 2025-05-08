@@ -5,7 +5,7 @@ const assert = require("node:assert");
 
 const getOrder = async (req,res) => {
 
-    const userId = req.params.userId;
+    const userId = req.user.id;
     try {
         const orders = await Order.find({ user: userId }).populate('items.product');
         if (!orders || orders.length === 0) {
@@ -20,7 +20,7 @@ const getOrder = async (req,res) => {
 
 
 const createOrder = async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.user.id;
     try{
         const { paymentMethod, shippingAddress } = req.body;
         const cart = await Cart.findOne({ user: userId }).populate('items.product');
@@ -49,10 +49,6 @@ const createOrder = async (req, res) => {
 
         await order.save();
 
-        // Clear the cart
-        cart.items = [];
-        await cart.save();
-
         // Return different responses based on payment method
         if (paymentMethod === 'cash') {
             return res.status(201).json({
@@ -66,7 +62,7 @@ const createOrder = async (req, res) => {
                 message: 'Order created successfully. Please complete payment.',
                 nextStep: {
                     action: 'PAYMENT_REQUIRED',
-                    endpoint: `/api/payments/create-payment-intent/${userId}`,
+                    endpoint: `/api/payments/create-payment-intent/${userId}`
                 }
             });
         } else if (paymentMethod === 'paypal') {

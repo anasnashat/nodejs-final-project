@@ -10,7 +10,11 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ForgetPasswordComponent } from './pages/forget-password/forget-password.component';
 import path from 'path';
+<<<<<<< HEAD
 import { CartComponent } from './cart/cart.component';
+=======
+import {CartComponent} from './cart/cart.component';
+>>>>>>> 82daa9ec86490ffc8474b3382a8f9b1c8bc5a5ec
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
