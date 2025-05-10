@@ -36,6 +36,7 @@ export class LoginComponent {
         },
         error: (err) => {
           console.log(err.error.message);
+          this.apiError=err.error.message;
           
         },
         complete() {

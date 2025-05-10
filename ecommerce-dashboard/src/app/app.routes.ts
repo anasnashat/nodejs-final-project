@@ -12,7 +12,7 @@ import { ForgetPasswordComponent } from './pages/forget-password/forget-password
 import path from 'path';
 
 import { CartComponent } from './cart/cart.component';
-import { LogoutComponent } from './pages/logout/logout.component';
+
 import { authGuard } from './core/guard/auth.guard';
 
 
@@ -89,5 +89,5 @@ export const routes: Routes = [
     component: ForgetPasswordComponent,
     title: 'forgetPassword',
   },
-  {path:'logout',component:LogoutComponent,title:'Logout'}
+ 
 ];
