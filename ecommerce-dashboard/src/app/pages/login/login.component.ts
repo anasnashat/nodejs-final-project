@@ -26,6 +26,8 @@ export class LoginComponent {
       this._authservice.login(this.loginForm.value).subscribe({
         next: (res) => {
           console.log(res);
+          localStorage.setItem('token',res.token)
+          this._authservice.saveUser();
           if (res.user.role === 'user') {
             this._router.navigate(['/home']);
           } else {

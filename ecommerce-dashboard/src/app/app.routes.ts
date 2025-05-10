@@ -12,6 +12,8 @@ import { ForgetPasswordComponent } from './pages/forget-password/forget-password
 import path from 'path';
 
 import { CartComponent } from './cart/cart.component';
+import { LogoutComponent } from './pages/logout/logout.component';
+import { authGuard } from './core/guard/auth.guard';
 
 
 export const routes: Routes = [
@@ -22,11 +24,13 @@ export const routes: Routes = [
       import('./features/components/home/home.component').then(
         (m) => m.HomeComponent
       ),
+      canActivate:[authGuard]
   },
   {
     path: 'payment-success',
     component: PaymentSuccessComponent,
-    title: 'Payment Success'
+    title: 'Payment Success',
+    canActivate:[authGuard]
   },
   {
     path: 'about',
@@ -48,6 +52,7 @@ export const routes: Routes = [
       import('./features/components/product-page/product-page.component').then(
         (m) => m.ProductPageComponent
       ),
+      canActivate:[authGuard]
   },
   {
     path: 'product/:id',
@@ -84,4 +89,5 @@ export const routes: Routes = [
     component: ForgetPasswordComponent,
     title: 'forgetPassword',
   },
+  {path:'logout',component:LogoutComponent,title:'Logout'}
 ];
