@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
+import {  ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
+  encapsulation: ViewEncapsulation.None,
   imports: [CommonModule,RouterLink],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
@@ -14,6 +16,14 @@ export class NavbarComponent implements OnInit {
   isLogin:boolean=false;
   scrolled = false;
   isDarkMode = false;
+
+toggleDarkMode() {
+  this.isDarkMode = !this.isDarkMode;
+  localStorage.setItem('darkMode', this.isDarkMode.toString());
+  document.body.classList.toggle('dark-mode', this.isDarkMode);
+}
+
+
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -38,15 +48,6 @@ export class NavbarComponent implements OnInit {
         console.log('done');
       }
     })
-  }
-  
-  toggleDarkMode(): void {
-    this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark-mode', this.isDarkMode);
-  
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      localStorage.setItem('darkMode', this.isDarkMode.toString());
-    }
   }
   
   logout(){
