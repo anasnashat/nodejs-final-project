@@ -14,28 +14,23 @@ import {  ViewEncapsulation } from '@angular/core';
 export class NavbarComponent implements OnInit {
   _authservice=inject(AuthService)
   isLogin:boolean=false;
-  scrolled = false;
-  isDarkMode = false;
+//   scrolled = false;
+//   isDarkMode = false;
 
-toggleDarkMode() {
-  this.isDarkMode = !this.isDarkMode;
-  localStorage.setItem('darkMode', this.isDarkMode.toString());
-  document.body.classList.toggle('dark-mode', this.isDarkMode);
-}
+// toggleDarkMode() {
+//   this.isDarkMode = !this.isDarkMode;
+//   localStorage.setItem('darkMode', this.isDarkMode.toString());
+//   document.body.classList.toggle('dark-mode', this.isDarkMode);
+// }
 
 
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.scrolled = window.scrollY > 50;
-  }
+  // @HostListener('window:scroll', [])
+  // onWindowScroll() {
+  //   this.scrolled = window.scrollY > 50;
+  // }
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      const dark = localStorage.getItem('darkMode') === 'true';
-      this.isDarkMode = dark;
-      document.body.classList.toggle('dark-mode', dark);
-    }
     this._authservice.userInfo.subscribe({
       next:(res)=>{
         this.isLogin=res?true:false;

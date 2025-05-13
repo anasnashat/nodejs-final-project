@@ -1,3 +1,4 @@
+/* Custom Navbar Styles */
 .custom-navbar {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   padding: 1rem;
@@ -18,54 +19,4 @@
 .custom-navbar .nav-link:hover,
 .custom-navbar .navbar-brand:hover {
   color: #301b23;
-}
-
-/* Background for toggled menu */
-.navbar-collapse.show {
-  background-color: #dccbcb;
-  padding: 1rem;
-  border-radius: 0 0 10px 10px;
-}
-
-/* Base dark mode style */
-/* body.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
-}
-
-body.dark-mode .custom-navbar {
-  background-color: #1f1f1f !important;
-}
-
-body.dark-mode .navbar-collapse.show {
-  background-color: #1f1f1f !important;
-}
-body.dark-mode .navbar-toggler {
-  background-color: #343a40 !important;
-}
-
-body.dark-mode .custom-navbar .nav-link,
-body.dark-mode .custom-navbar .navbar-brand {
-  color: #ffffff !important;
-}
-
-body.dark-mode .nav-link:hover {
-  color: #f0c674 !important;
-} */
-
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .custom-navbar .navbar-nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .custom-navbar .d-flex {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .custom-navbar .nav-link {
-    padding: 0.5rem 0;
-  }
 }
