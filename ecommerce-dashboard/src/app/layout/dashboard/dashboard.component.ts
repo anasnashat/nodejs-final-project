@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component,HostListener, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,46 +8,27 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-  isSmallScreenFlag: boolean = false;
-  sidebarOpen: boolean = false; // Flag to control sidebar visibility
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+export class DashboardComponent {
+  sidebarCollapsed = true;
+  isSmallScreen = false;
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      // Add resize event listener when in browser environment
-      window.addEventListener('resize', this.onResize.bind(this));
-      this.checkIfSmallScreen();
-    }
+    this.checkScreenSize();
   }
 
-  ngOnDestroy(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      // Remove event listener to avoid memory leaks
-      window.removeEventListener('resize', this.onResize.bind(this));
-    }
-  }
-
-  // Method to check if the screen width is small
-  checkIfSmallScreen(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isSmallScreenFlag = window.innerWidth <= 768;
-    }
-  }
-
-  // Handle resize event
-  onResize(event: Event): void {
-    this.checkIfSmallScreen();
-  }
-
-  // Toggle the sidebar visibility
   toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
-  // Getter method for accessing the screen size flag
-  get isSmallScreen(): boolean {
-    return this.isSmallScreenFlag;
+  @HostListener('window:resize', [])
+  onResize(): void {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize(): void {
+    this.isSmallScreen = window.innerWidth < 992; // Bootstrap's lg breakpoint
+    if (!this.isSmallScreen) {
+      this.sidebarCollapsed = false;
+    }
   }
 }
