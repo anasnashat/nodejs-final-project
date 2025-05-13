@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/EmailService");
 const crypto = require("crypto");
+const { route } = require("../routes/authRoutes");
 require("dotenv").config();
 
 const SignUp = async (req, res, next) => {
@@ -48,14 +49,7 @@ const SignUp = async (req, res, next) => {
 
     res.status(201).json({
       message: "User register successfully , please check your email account",
-      data: {
-        user: {
-          name: userResponse.name,
-          email: userResponse.email,
-          profileImage: userResponse.profileImage,
-          role:userResponse.role,
-        }
-      }
+      data: userResponse
     });
   } catch (err) {
     next(new AppError(err.message, 500));
@@ -209,4 +203,5 @@ const approveUser = async (req, res, next)=>{
     next (new AppError(err.message,500))
   }
 }
+
 module.exports = { SignUp, Login, verifiyEmail, forgetPassword, resetPassword ,approveUser};
