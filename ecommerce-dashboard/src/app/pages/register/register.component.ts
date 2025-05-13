@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,18 +7,24 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
-
+import { decl } from 'postcss';
+declare var bootstrap:any;
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
+
 export class RegisterComponent {
+  
   _authservice = inject(AuthService);
   _router = inject(Router);
   apiError: string = '';
   selectedImage: File | null = null;
+
+ 
+
   registerForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(5)]),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -42,14 +48,11 @@ export class RegisterComponent {
      if (this.selectedImage) {
        formData.append('profileImage', this.selectedImage);
      }
-    if (this.registerForm.valid) {
+     if (this.registerForm.valid) {
       this._authservice.register(formData).subscribe({
         next: (res) => {
-          console.log(res);
-          if (res.user.verified) {
-             this._router.navigate(['/login']);
-          }
          
+          this._router.navigate(['/login']);
         },
         error: (err) => {
           console.log(err.error.message);
@@ -62,6 +65,7 @@ export class RegisterComponent {
     } else {
       this.registerForm.markAllAsTouched();
     }
+  
   }
   closeError() {
     this.apiError = '';
