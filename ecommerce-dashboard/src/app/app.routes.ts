@@ -38,6 +38,7 @@ export const routes: Routes = [
       import('./shared/components/about/about.component').then(
         (m) => m.AboutComponent
       ),
+      canActivate:[authGuard]
   },
   {
     path: 'categoryPage',
@@ -45,6 +46,7 @@ export const routes: Routes = [
       import(
         './features/components/category-page/category-page.component'
       ).then((m) => m.CategoryPageComponent),
+      canActivate:[authGuard]
   },
   {
     path: 'productPage',
@@ -80,6 +82,7 @@ export const routes: Routes = [
         title: "Cart"
       }
     ],
+    canActivate:[authGuard]
   },
   { path: 'login', component: LoginComponent, title: 'Login' },
   {
