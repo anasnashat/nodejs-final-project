@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-show-users',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './show-users.component.html',
   styleUrl: './show-users.component.css',
 })
