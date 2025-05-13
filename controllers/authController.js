@@ -63,7 +63,7 @@ const Login = async (req, res, next) => {
     if (!user) {
       return next(new AppError("can't find this user", 404));
     }
-    if (!user.verified) {
+    if (!user.verified && user.role==='user') {
       return next(new AppError('Your Account Must be Verifed by Admin', 403));
     }
     const isMatched = await bcrypt.compare(password, user.password);

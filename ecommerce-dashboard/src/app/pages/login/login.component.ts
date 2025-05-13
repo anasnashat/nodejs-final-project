@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   apiError: string = '';
+  admin_rule:string='';
   _authservice = inject(AuthService);
   _router = inject(Router);
   loginForm: FormGroup = new FormGroup({
@@ -26,6 +27,8 @@ export class LoginComponent {
       this._authservice.login(this.loginForm.value).subscribe({
         next: (res) => {
           console.log(res);
+          this.admin_rule=res.user.role;
+          console.log(this.admin_rule);
           localStorage.setItem('token',res.token)
           this._authservice.saveUser();
           if (res.user.role === 'user') {
@@ -36,7 +39,10 @@ export class LoginComponent {
         },
         error: (err) => {
           console.log(err.error.message);
-          this.apiError=err.error.message;
+          if(this.admin_rule==='user'){
+           this.apiError=err.error.message;
+          }
+         
           
         },
         complete() {
