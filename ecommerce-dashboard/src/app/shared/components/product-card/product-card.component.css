@@ -5,6 +5,9 @@
   .product-card:hover {
     transform: scale(1.03);
   }
+  .card img{
+    height: 300px;
+  }
   
   .icon-overlay {
     opacity: 0;
