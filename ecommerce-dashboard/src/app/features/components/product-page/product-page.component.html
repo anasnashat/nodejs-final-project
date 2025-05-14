@@ -1,58 +1,70 @@
 <!-- Banner Section -->
 <div class="position-relative mt-5 pt-4">
-    <img src="assets/banner.jpg" class="img-fluid w-100" alt="Jewelry Banner" style="max-height: 400px; object-fit: cover;">
-    <div class="position-absolute top-50 end-0 translate-middle-y text-white px-3 pe-5">
-      <h1 class="fw-bold display-4 text-center shadow-lg">PRODUCTS</h1>
+  <img src="assets/banner.jpg" class="img-fluid w-100" alt="Jewelry Banner" style="max-height: 400px; object-fit: cover;">
+  <div class="position-absolute top-50 end-0 translate-middle-y text-white px-3 pe-5">
+    <h1 class="fw-bold display-4 text-center shadow-lg">PRODUCTS</h1>
+  </div>
+</div>
+
+<div class="container py-5">
+  <h3 class="fw-bold text-center mb-4">Shop By Products</h3>
+
+  <!-- Filter Section -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-3 mb-2">
+      <input type="text"
+             class="form-control"
+             placeholder="Search by name"
+             [(ngModel)]="filters.name"
+             (input)="applyFilters()" />
+    </div>
+
+    <div class="col-md-3 mb-2">
+      <select class="form-select"
+              [(ngModel)]="filters.category"
+              (change)="applyFilters()">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of availableCategories" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 mb-2">
+      <input type="number"
+             class="form-control"
+             placeholder="Min Price"
+             [(ngModel)]="filters.minPrice"
+             (input)="applyFilters()" />
+    </div>
+
+    <div class="col-md-2 mb-2">
+      <input type="number"
+             class="form-control"
+             placeholder="Max Price"
+             [(ngModel)]="filters.maxPrice"
+             (input)="applyFilters()" />
     </div>
   </div>
-  
-  <div class="container py-5">
-    <h3 class="fw-bold text-center mb-4">Shop By Products</h3>
-  
-    <!-- Filter Section (put outside the row of products) -->
-    <div class="row justify-content-center mb-5">
-      <!-- Name Filter -->
-      <div class="col-md-3 mb-2">
-        <input type="text"
-               class="form-control"
-               placeholder="Search by name"
-               [(ngModel)]="filters.name"
-               (input)="applyFilters()" />
-      </div>
-  
-      <!-- Category Filter -->
-      <div class="col-md-3 mb-2">
-        <select class="form-select"
-                [(ngModel)]="filters.category"
-                (change)="applyFilters()">
-          <option value="">All Categories</option>
-          <option *ngFor="let cat of availableCategories" [value]="cat">{{ cat }}</option>
-        </select>
-      </div>
-  
-      <!-- Price Filters -->
-      <div class="col-md-2 mb-2">
-        <input type="number"
-               class="form-control"
-               placeholder="Min Price"
-               [(ngModel)]="filters.minPrice"
-               (input)="applyFilters()" />
-      </div>
-  
-      <div class="col-md-2 mb-2">
-        <input type="number"
-               class="form-control"
-               placeholder="Max Price"
-               [(ngModel)]="filters.maxPrice"
-               (input)="applyFilters()" />
-      </div>
-    </div>
-  
-    <!-- Products Grid -->
-    <div class="row g-4 justify-content-center">
-      <div class="p-3 col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let product of filteredProducts">
-        <app-product-card [product]="product"></app-product-card>
-      </div>
+
+  <!-- Products Grid -->
+  <div class="row g-4 justify-content-center">
+    <div class="p-3 col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let product of paginatedProducts()">
+      <app-product-card [product]="product"></app-product-card>
     </div>
   </div>
-  
+
+  <!-- Pagination Controls -->
+<div class="d-flex justify-content-between mt-5" *ngIf="filteredProducts.length > pageSize">
+  <button class="btn me-2 w-25"
+          style="background-color: rgb(209, 177, 139); color: azure;"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1">
+    Previous
+  </button>
+  <button class="btn w-25"
+          style="background-color: rgb(209, 177, 139); color: azure;"
+          (click)="nextPage()"
+          [disabled]="currentPage * pageSize >= filteredProducts.length">
+    Next
+  </button>
+</div>
+</div>

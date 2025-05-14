@@ -5,6 +5,9 @@
   .product-card:hover {
     transform: scale(1.03);
   }
+  .card img{
+    height: 300px;
+  }
 
   .icon-overlay {
     opacity: 0;
@@ -34,21 +37,4 @@
   .icon-overlay i:hover {
     background-color: rgb(209, 177, 139);
     color: rgb(115, 105, 105);
-  }
-
-  .icon-overlay i.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .added-to-cart-message {
-    z-index: 20;
-    animation: fadeInOut 3s ease;
-  }
-
-  @keyframes fadeInOut {
-    0% { opacity: 0; }
-    15% { opacity: 1; }
-    85% { opacity: 1; }
-    100% { opacity: 0; }
   }
