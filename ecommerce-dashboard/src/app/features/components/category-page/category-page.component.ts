@@ -7,48 +7,67 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-category-page',
-  imports: [CategoryCardComponent,FormsModule,CommonModule],
+  imports: [CategoryCardComponent, FormsModule, CommonModule],
   templateUrl: './category-page.component.html',
   styleUrl: './category-page.component.css'
 })
 export class CategoryPageComponent {
-    allCategories: Category[] = [];
-    searchTerm: string = '';
-    filteredCategories = this.allCategories;
-  
-    constructor(private _categoryService: CategoryService) {}
+  allCategories: Category[] = [];
+  searchTerm: string = '';
+  filteredCategories: Category[] = [];
 
-  // Method to filter categories based on the search term
+  currentPage: number = 1;
+  pageSize: number = 6;
+
+  constructor(private _categoryService: CategoryService) {}
+
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  getCategories() {
+    this._categoryService.getCategories().subscribe({
+      next: (response) => {
+        this.allCategories = response;
+        this.applyFilters();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+      complete: () => {
+        console.log('Categories loaded successfully!');
+      }
+    });
+  }
+
   filterCategories(): void {
-    if (this.searchTerm === '') {
-      // If no search term, show all categories
-      this.filteredCategories = this.allCategories;
-    } else {
-      // Filter categories based on name or description
-      this.filteredCategories = this.allCategories.filter(category => 
-        category.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    const search = this.searchTerm.toLowerCase();
+    const filtered = this.searchTerm
+      ? this.allCategories.filter(cat => cat.name.toLowerCase().includes(search))
+      : [...this.allCategories];
+
+    this.filteredCategories = filtered;
+  }
+
+  get paginatedCategories(): Category[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredCategories.slice(start, start + this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage * this.pageSize < this.filteredCategories.length) {
+      this.currentPage++;
     }
   }
-  
-    ngOnInit(): void {
-      this.getCategories();
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
     }
-  
-    getCategories() {
-      this._categoryService.getCategories().subscribe({
-        next: (response) => {
-          console.log(response);
-          this.allCategories = response;
-          this.filteredCategories = response;
-          console.log(this.allCategories);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-        complete: () => {
-          console.log('Categories loaded successfully!');
-        }
-      });
-    }
+  }
 }

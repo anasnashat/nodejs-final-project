@@ -1,32 +1,48 @@
 <!-- Banner Section -->
 <div class="position-relative mt-5 pt-4">
-    <img src="assets/banner.jpg" class="img-fluid w-100" alt="Jewelry Banner" style="max-height: 400px; object-fit: cover;">
-    <div class="position-absolute top-50 end-0 translate-middle-y text-white px-3 pe-5">
-      <h1 class="fw-bold display-4 text-center shadow-lg">CATEGORIES</h1>
-    </div>
+  <img src="assets/banner.jpg" class="img-fluid w-100" alt="Jewelry Banner" style="max-height: 400px; object-fit: cover;">
+  <div class="position-absolute top-50 end-0 translate-middle-y text-white px-3 pe-5">
+    <h1 class="fw-bold display-4 text-center shadow-lg">CATEGORIES</h1>
   </div>
-
+</div>
 
 <!-- Search Bar Section -->
 <div class="container-fluid py-5">
-    <h3 class="fw-bold text-center m-4">Shop By Categories</h3>
-    <div class="row justify-content-center mb-4">
-        <div class="col-md-6">
-            <input
-                type="text"
-                class="form-control"
-                [(ngModel)]="searchTerm"
-                (input)="filterCategories()"
-                placeholder="Search categories"
-            />
-        </div>
-    </div>
+  <h3 class="fw-bold text-center m-4">Shop By Categories</h3>
 
-
-    <!-- Categories Section -->
-    <div class="d-flex justify-content-center flex-wrap gap-4 p-5 mt-5">
-        <div *ngFor="let category of filteredCategories">
-            <app-category-card [category]="category"></app-category-card>
-        </div>
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchTerm"
+        (input)="filterCategories()"
+        placeholder="Search categories"
+      />
     </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="d-flex justify-content-center flex-wrap gap-4 p-5 mt-5">
+    <div *ngFor="let category of paginatedCategories">
+      <app-category-card [category]="category"></app-category-card>
+    </div>
+  </div>
+
+  <!-- Pagination Buttons -->
+  <div class="d-flex justify-content-between mt-4 px-5" *ngIf="filteredCategories.length > pageSize">
+    <button class="btn w-25"
+            style="background-color: rgb(209, 177, 139); color: azure;"
+            (click)="prevPage()"
+            [disabled]="currentPage === 1">
+      Previous
+    </button>
+
+    <button class="btn w-25"
+            style="background-color: rgb(209, 177, 139); color: azure;"
+            (click)="nextPage()"
+            [disabled]="currentPage * pageSize >= filteredCategories.length">
+      Next
+    </button>
+  </div>
 </div>
