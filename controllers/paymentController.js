@@ -1,7 +1,27 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 const orderController = require('../controllers/orderController');
 const Cart = require('../models/Cart');
+
+/**
+ * Helper function to decrease product stock after successful payment
+ * @param {Array} orderItems - Array of order items with product and quantity
+ */
+const decreaseProductStock = async (orderItems) => {
+  try {
+    for (const item of orderItems) {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.stock = Math.max(0, product.stock - item.quantity);
+        await product.save();
+        console.log(`Decreased stock for product ${product.name} to ${product.stock}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error decreasing product stock:', error);
+  }
+};
 
 /**
  * Create a checkout session with Stripe
@@ -98,6 +118,8 @@ const confirmPayment = async (req, res) => {
 
       await order.save();
 
+      // Decrease product stock
+      await decreaseProductStock(order.items);
     }
 
     res.status(200).json(order);
@@ -141,6 +163,9 @@ const handleWebhook = async (req, res) => {
             email_address: session.customer_details?.email || ''
           };
           await order.save();
+
+          // Decrease product stock
+          await decreaseProductStock(order.items);
         }
       }
     }
