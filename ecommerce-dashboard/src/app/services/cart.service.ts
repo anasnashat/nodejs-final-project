@@ -10,7 +10,7 @@ export class CartService {
   private apiUrl = 'http://localhost:5000/api/cart/';
   private ordersUrl = 'http://localhost:5000/api/orders/';
   private paymentsUrl = 'http://localhost:5000/api/payments';
-  private authToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMUBhZG1pbi5jb20iLCJpYXQiOjE3NDY2NzExNTl9.Woa0nhTpq7UR2Jxy4BuPMDfy450Pj4tIkLAUKbeYaRM";
+  private authToken = "Bearer " + localStorage.getItem('token') || '';
 
   constructor(private _httpClient: HttpClient) {}
 
@@ -26,6 +26,14 @@ export class CartService {
 
   addToCart(productId: string): Observable<any> {
     return this._httpClient.post(this.apiUrl, { productId }, { headers: this.headers });
+  }
+
+  removeFromCart(productId: string): Observable<any> {
+    return this._httpClient.delete(`${this.apiUrl}${productId}`, { headers: this.headers });
+  }
+
+  updateQuantity(productId: string, quantity: number): Observable<any> {
+    return this._httpClient.put(this.apiUrl, { productId, quantity }, { headers: this.headers });
   }
 
   createOrder(orderData: any): Observable<any> {
