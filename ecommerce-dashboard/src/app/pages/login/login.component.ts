@@ -42,6 +42,7 @@ export class LoginComponent {
           if(this.admin_rule==='user'){
            this.apiError=err.error.message;
           }
+          this.apiError=err.error.message;
          
           
         },
