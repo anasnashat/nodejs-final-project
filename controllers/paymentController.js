@@ -44,13 +44,13 @@ const createPaymentIntent = async (req, res) => {
 
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'alipay', 'ideal', 'sepa_debit', 'amazon_pay'],
+
       line_items: order.items.map(item => ({
         price_data: {
           currency: 'usd',
           product_data: {
             name: item.product.name,
-            images: [item.product.image],
           },
           unit_amount: Math.round(item.product.price * 100), // Amount in cents
         },
@@ -118,8 +118,6 @@ const confirmPayment = async (req, res) => {
 
       await order.save();
 
-      // Decrease product stock
-      await decreaseProductStock(order.items);
     }
 
     res.status(200).json(order);
@@ -163,9 +161,6 @@ const handleWebhook = async (req, res) => {
             email_address: session.customer_details?.email || ''
           };
           await order.save();
-
-          // Decrease product stock
-          await decreaseProductStock(order.items);
         }
       }
     }
