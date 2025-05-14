@@ -1,20 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../services/cart.service';
 import { CommonModule } from '@angular/common';
-
-export interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-  stock: number;
-  image: string;
-  sliderImages: string[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import { RouterLink } from '@angular/router';
+import { Product } from '../interfaces/product';
 
 export interface CartItem {
   _id: string;
@@ -24,7 +12,8 @@ export interface CartItem {
 
 @Component({
   selector: 'app-cart',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -50,7 +39,11 @@ export class CartComponent implements OnInit {
   loadCartItems(): void {
     this.cartService.getCartItems().subscribe({
       next: (response: any) => {
-        this.cartItems = response;
+        console.log('Cart items response:', response.items);
+        this.cartItems = response.items;
+        console.log(this.cartItems)
+
+        this.calculateTotalPrice();
         console.log('Cart items:', this.cartItems);
       },
       error: (err) => {
@@ -60,7 +53,52 @@ export class CartComponent implements OnInit {
     });
   }
 
+  removeItem(productId: string): void {
+    this.cartService.removeFromCart(productId).subscribe({
+      next: () => {
+        this.cartItems = this.cartItems.filter(item => item.product?._id !== productId);
+        this.calculateTotalPrice();
+      },
+      error: (err) => {
+        this.error = 'Failed to remove item from cart';
+        console.error(err);
+      }
+    });
+  }
+
+  updateQuantity(productId: string, quantity: number): void {
+    if (quantity < 1) return;
+
+    this.cartService.updateQuantity(productId, quantity).subscribe({
+      next: (response) => {
+        const itemIndex = this.cartItems.findIndex(item => item.product?._id === productId);
+        if (itemIndex !== -1) {
+          this.cartItems[itemIndex].quantity = quantity;
+          this.calculateTotalPrice();
+        }
+      },
+      error: (err) => {
+        this.error = 'Failed to update quantity';
+        console.error(err);
+      }
+    });
+  }
+
+  handleQuantityChange(productId: string, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target && target.value) {
+      const quantity = +target.value;
+      this.updateQuantity(productId, quantity);
+    }
+  }
+
   checkout(): void {
+    // Check if cart is empty
+    if (this.cartItems.length === 0) {
+      this.error = 'Your cart is empty. Please add items before checkout.';
+      return;
+    }
+
     this.loading = true;
     this.error = null;
 
