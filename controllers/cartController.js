@@ -15,6 +15,20 @@ const getCart = async (req, res) => {
             .select('-__v')
             .populate('items.product');
 
+        // add the image URL to each product in the cart
+        if (cart && cart.items.length > 0) {
+            cart.items = cart.items.map(item => {
+                const product = item.product;
+                return {
+                    ...item.toObject(),
+                    product: {
+                        ...product.toObject(),
+                        imageUrl: `http://localhost:5000/uploads/${product.image}`
+                    }
+                };
+            });
+        }
+
         if (!cart) {
             cart = new Cart({ user: userId, items: [] });
         }
