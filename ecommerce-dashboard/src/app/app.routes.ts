@@ -76,11 +76,6 @@ export const routes: Routes = [
       { path: 'showProducts', component: ProductListComponent },
       { path: 'showUsers', component: ShowUsersComponent, title: 'Users' },
       { path: '', redirectTo: 'categories', pathMatch: 'full' },
-      {
-        path: "cart",
-        component: CartComponent,
-        title: "Cart"
-      }
     ],
     canActivate:[authGuard]
   },
@@ -92,5 +87,11 @@ export const routes: Routes = [
     component: ForgetPasswordComponent,
     title: 'forgetPassword',
   },
- 
+  {
+    path: 'cart',
+    component: CartComponent,
+    title: 'Cart',
+    canActivate:[authGuard]
+  },
+
 ];
