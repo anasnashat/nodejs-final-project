@@ -42,6 +42,12 @@ const OrderSchema = new mongoose.Schema({
     paidAt:{
         type: Date,
     },
+    paymentResult: {
+        id: String,
+        status: String,
+        update_time: Date,
+        email_address: String
+    },
     shippingAddress: {
         fullName: String,
         phone: String,

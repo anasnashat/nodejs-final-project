@@ -1,0 +1,70 @@
+/* Card Styles */
+.card {
+    min-height: 450px; /* Adjust the minimum height to give more space for images */
+    max-height: 750px; /* Ensure that the card height doesn't grow too tall */
+    border-radius: 1rem;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-img-top {
+    object-fit: cover; /* Ensure the image fills the container while keeping its aspect ratio */
+    height: 500px; /* Adjust the height of the image to make it larger */
+    width: 100%; /* Ensure it stretches across the full width of the card */
+    transition: transform 0.3s ease;
+  }
+  
+  .card-img-top:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+  }
+  
+  /* Card Body */
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+    color: rgb(52, 49, 43);
+  }
+  
+  .card-text {
+    font-size: 0.9rem;
+  }
+  
+  .card-body .text-success {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  
+  /* Add to Cart Button */
+  .card button {
+    transition: background-color 0.3s ease;
+  }
+  
+  .card button:hover {
+    background-color: rgb(169, 145, 105);
+  }
+  
+  /* Layout */
+  .row-cols-1, .row-cols-sm-2, .row-cols-md-3, .row-cols-lg-4 {
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 992px) {
+    .row-cols-lg-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .row-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  

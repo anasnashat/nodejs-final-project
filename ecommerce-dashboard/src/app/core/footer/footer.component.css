@@ -1,0 +1,73 @@
+footer {
+    background-color: #2b2d42; /* Dark background for contrast */
+  }
+  
+  footer h5 {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(209, 177, 139);
+    text-transform: uppercase;
+  }
+  
+  footer p {
+    font-size: 14px;
+    color: #aaa;
+  }
+  
+  footer ul {
+    padding-left: 0;
+  }
+  
+  footer ul li {
+    margin-bottom: 8px;
+  }
+  
+  footer .text-hover:hover {
+    color: rgb(209, 177, 139);
+    text-decoration: underline;
+  }
+  
+  footer .btn {
+    background-color: rgb(209, 177, 139);
+    border: none;
+    color: white;
+  }
+  
+  footer .btn:hover {
+    background-color: #3c2a2a;
+  }
+  
+  /* Add subtle borders between columns */
+  footer .col-md-3 {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  footer .col-md-3:last-child {
+    border-right: none;
+  }
+  
+  /* Adjust spacing between elements */
+  footer .list-unstyled li {
+    font-size: 14px;
+  }
+  
+  footer .col-md-3 {
+    padding-right: 30px;
+  }
+  
+  /* Add padding to the container */
+  footer .container {
+    padding: 0 30px;
+  }
+  
+  @media (max-width: 767px) {
+    footer .col-md-3 {
+      border-right: none;
+      margin-bottom: 30px;
+    }
+  
+    footer .text-center.mt-4 {
+      margin-top: 20px;
+    }
+  }
+  

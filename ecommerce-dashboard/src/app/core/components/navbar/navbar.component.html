@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg fixed-top custom-navbar scrolled">
+  <div class="container">
+    <!-- Navbar Brand -->
+    <a class="navbar-brand brand" routerLink="/home">
+      <h1>JEWELLERY</h1>
+    </a>
+
+    <!-- Navbar Toggler (Hamburger Menu) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg" aria-labelledby="navbarOffcanvasLgLabel" style="width: 300px;">
+      <div class="offcanvas-header" style="background-color: #484848; color: #f4f4f4;">
+        <h5 id="navbarOffcanvasLgLabel">Menu</h5>
+        <button type="button" class="btn-close text-reset text-bg-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body" style="background-color: #dccbcb;">
+        <!-- Navbar links -->
+        <ul class="navbar-nav gap-4 ms-5 pt-3">
+          <li  class="nav-item">
+            <a class="nav-link" routerLink="/home">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/categoryPage">Categories</a>
+          </li>
+          <li  class="nav-item">
+            <a class="nav-link" routerLink="/productPage">Products</a>
+          </li>
+        </ul>
+
+        <!-- Icons in Navbar -->
+        <div class="d-flex align-items-center justify-content-end gap-4 ms-auto">
+          <a href="#" class="nav-link"><i class="bi bi-search"></i></a>
+          <a href="" class="nav-link"><i class="bi bi-heart"></i></a>
+          <a routerLink="/cart" class="nav-link"><i class="bi bi-cart"></i> $0.00</a>
+        </div>
+
+        <!-- Register / Login / Logout Buttons -->
+        <div *ngIf="!isLogin" class="d-flex gap-4 p-4">
+          <a class="nav-link" routerLink="/register">Register</a>
+          <a class="nav-link" routerLink="/login">Login</a>
+        </div>
+                <div *ngIf="isLogin" class="d-flex gap-4 p-4">
+          <a class="nav-link" href="#" (click)="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

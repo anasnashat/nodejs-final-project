@@ -13,7 +13,14 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json())
+// Special handling for Stripe webhook - needs raw body
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
@@ -28,15 +35,23 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const {verifyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
-const wishlistRoutes = require("./routes/wishlistRoutes");
-
+// const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
+const cartRouters = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes');
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth/users', authRoutes);
-app.use("/api/users", verifyUser, authorizeAdmin, userRoutes);
-app.use("/wishlist", wishlistRoutes);
+// app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
+app.use('/api/cart', cartRouters);
+app.use('/api/orders', orderRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use("/api/users",  userRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+
+
 
 // Root route
 app.get('/', (req, res) => {

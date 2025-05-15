@@ -1,0 +1,18 @@
+.container-fluid {
+    background-color: #f4f4f4;
+  }
+
+  .container-fluid h3{
+    color: rgb(52, 49, 43); 
+    font-size: 50px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .display-1 {
+    font-size: 4rem; /* Increase icon size */
+  }
+  

@@ -1,0 +1,25 @@
+.title h5{
+    color: rgb(209, 177, 139); 
+    font-size: 30px;
+}
+.title h2{
+    font-size: 70px;
+}
+.title h3{
+    font-size: 30px;
+}
+.buttons .shop{
+    background-color: #ddaaac;
+    color: #fff;
+}
+.buttons .shop:hover{
+    background-color: #301b23;
+    color: #fff;
+}
+.buttons .view{
+    color: #301b23;
+}
+.buttons .view:hover{
+    color: #fff;
+    background-color: #301b23;
+}

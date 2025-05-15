@@ -1,0 +1,8 @@
+.container h3{
+    color: rgb(52, 49, 43); 
+    font-size: 50px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+.container-fluid{
+    background-color: #e3d6d7;
+}

@@ -1,0 +1,55 @@
+<div class="container  p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Products</h3>
+    <span class="badge bg-primary">{{ allusers.length }} Users Added </span>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded ">
+    <table class="table table-hover align-middle ">
+      <thead class="table-light">
+        <tr >
+          <th>Image</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Approved</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="p-4">
+        @for (user of allusers; track user._id) {
+        <tr class="p-4">
+          <td>
+            <img
+              [src]="user.profileImage"
+              alt="Product Image"
+              class="img-thumbnail"
+              style="width: 60px; height: 60px; object-fit: cover"
+            />
+          </td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td class="text-center">
+            @if(user.status==='approved'){
+              <span class="text-success font-weight bold">Approved</span>
+            }
+            @if(user.status!=='approved'){
+              <span>
+                <a (click)="approveUser(user._id)"  class="nav-link" style="cursor: pointer;">Not Approved</a>
+              </span>
+            }
+            
+          </td>
+          
+
+          <td class="text-end">
+            
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user._id)" title="Delete">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

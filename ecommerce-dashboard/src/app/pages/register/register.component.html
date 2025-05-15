@@ -1,0 +1,150 @@
+<div class="position-relative rounded mt-5 pt-5">
+  <div class="form">
+    <div class="d-none d-lg-block">
+      <img src="assets/jewelly.webp" alt="" />
+    </div>
+    
+    <div>
+      <div class="error-container mb-4">
+        @if (apiError) {
+        <div class="alert-error">
+          {{ apiError }}
+          <button type="button" class="close-btn" (click)="closeError()">
+            &times;
+          </button>
+        </div>
+        }
+      </div>
+
+      <form action="" [formGroup]="registerForm" (ngSubmit)="register()"  enctype="multipart/form-data">
+        <h5 class="fw-bold text-uppercase mb-3 text-center">Sign up</h5>
+        <p class="text-center">Please fill this form to</p>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="UserName"
+            placeholder="UserName"
+            formControlName="name"
+          />
+          <label for="UserName">UserName</label>
+          @if(registerForm.get('name')?.errors &&
+          registerForm.get('name')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(registerForm.get('name')?.getError('required')){
+            <p class="mb-0">Name is required</p>
+            }@else if (registerForm.get('name')?.getError('minlength')) {
+            <p class="mb-0">
+              Required Length is
+              {{
+                registerForm.get("name")?.getError("minlength").requiredLength
+              }}
+            </p>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+          <label for="email">Email</label>
+          @if(registerForm.get('email')?.errors &&
+          registerForm.get('email')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(registerForm.get('email')?.getError('required')){
+            <p class="mb-0">Email is required</p>
+            }
+          </div>
+          }
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <label for="password">Password</label>
+          @if(registerForm.get('password')?.errors &&
+          registerForm.get('password')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(registerForm.get('password')?.getError('required')){
+            <p class="mb-0">Password is required</p>
+            }@else if (registerForm.get('name')?.getError('minlength')) {
+            <p class="mb-0">
+              Required Length is
+              {{
+                registerForm.get("password")?.getError("minlength")
+                  .requiredLength
+              }}
+            </p>
+            }
+          </div>
+          }
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="repassword"
+            placeholder="RePassword"
+            formControlName="repassword"
+          />
+          <label for="password">RePassword</label>
+
+           @if(registerForm.get('repassword')?.errors &&
+          registerForm.get('repassword')?.touched){
+          <div class="alert alert-secondary p-1">
+            @if(registerForm.get('repassword')?.getError('required')){
+            <p class="mb-0">Password is required</p>
+            }@else if (registerForm.get('name')?.getError('minlength')) {
+            <p class="mb-0">
+              Required Length is
+              {{
+                registerForm.get("password")?.getError("minlength")
+                  .requiredLength
+              }}
+            </p>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="profileImage" class="form-label">Upload Your Image</label>
+          <input
+            type="file"
+            (change)="onImageSelect($event)"
+            id="profileImage"
+            placeholder="Upload Your Image"
+            class="form-control"
+            name="profileImage"
+          />
+        </div>
+
+
+        <button class="btn" [disabled]="registerForm.invalid">Register</button>
+        <p class="my-3 d-flex">
+          Already have an account?
+          <a
+            style="color: rgb(209, 177, 139)"
+            class="nav-link"
+            routerLink="/login"
+          >
+            Login</a
+          >
+        </p>
+      </form>
+    </div>
+  </div>
+
+
+
+</div>

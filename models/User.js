@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        default:'pending'
+    },
+    repassword: {
+        type: String,
+        
+    },
    
     verified: {
         type: Boolean,
@@ -39,6 +47,7 @@ const userSchema = new mongoose.Schema({
     },
     profileImage: {
         type: String,
+        default:"/uploads/profile.png",
         select:false
     },
     role: {

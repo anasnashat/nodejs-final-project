@@ -1,11 +1,14 @@
 const express = require('express');
-const { SignUp, Login, verifiyEmail, forgetPassword, resetPassword } = require('../controllers/authController');
+const { SignUp, Login, verifiyEmail, forgetPassword, resetPassword, approveUser } = require('../controllers/authController');
+const upload = require('../utils/upload');
+const {  signupVaildation, loginVaildation, forgetPasswordVaildation } = require('../middlewares/vaildation');
 const router = express.Router();
 
-router.post('/signup', SignUp);
-router.post('/login', Login);
-router.get('/verify', verifiyEmail)
-router.post('/forget-password', forgetPassword)
-router.post('/reset-password',resetPassword)
+router.post('/signup',upload.single('profileImage'),signupVaildation, SignUp);
+router.post('/login', loginVaildation,Login);
+router.get('/verify-email', verifiyEmail);
+router.post('/forget-password', forgetPasswordVaildation,forgetPassword)
+router.post('/reset-password', resetPassword)
+router.patch('/:id/approve',approveUser)
 
 module.exports = router;
