@@ -28,13 +28,15 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const { verifiyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
+const {verifyUser, authorizeAdmin } = require('./middlewares/authMiddleware');
+const wishlistRoutes = require("./routes/wishlistRoutes");
 
 // Use routes
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth/users', authRoutes);
-app.use("/api/users", verifiyUser, authorizeAdmin, userRoutes);
+app.use("/api/users", verifyUser, authorizeAdmin, userRoutes);
+app.use("/wishlist", wishlistRoutes);
 
 // Root route
 app.get('/', (req, res) => {
